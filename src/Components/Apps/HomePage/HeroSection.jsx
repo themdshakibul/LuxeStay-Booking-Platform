@@ -11,7 +11,7 @@ import {
   MdOutlineApartment,
 } from "react-icons/md";
 
-export default function Home() {
+export default function HeroSection() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [propertyType, setPropertyType] = useState("");

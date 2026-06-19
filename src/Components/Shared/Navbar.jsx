@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
+import Link from "next/link"; 
 import { usePathname, useRouter } from "next/navigation";
 import {
   Navbar as NextUINavbar,
@@ -26,10 +26,12 @@ import {
 import Logo from "./Reusable/Logo";
 import { ThemeSwitch } from "./ThemeProvider/ThemeSwitch";
 import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
 export default function Navbar() {
   const { data: session } = authClient.useSession();
   const user = session?.user;
+
   const pathname = usePathname();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -114,7 +116,7 @@ export default function Navbar() {
                       className="transition-all duration-200 ring-2 ring-violet-500/50 hover:ring-violet-500 hover:scale-105 w-9 h-9 text-xs cursor-pointer"
                       color="primary"
                       name={user.name || "User"}
-                      src={user.image || ""}
+                      src={session.user.image || ""}
                     />
                   </DropdownTrigger>
                   <DropdownMenu
@@ -149,7 +151,8 @@ export default function Navbar() {
 
                     <DropdownItem
                       key="dashboard"
-                      href="/dashboard"
+                      as={Link}
+                      href={`/dashboard/${session.user.role}`}
                       startContent={
                         <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-950/40">
                           <MdDashboard className="text-base text-violet-600 dark:text-violet-400" />
@@ -162,7 +165,7 @@ export default function Navbar() {
                       }
                       className="rounded-xl py-2.5 px-3 text-xs font-semibold data-[hover=true]:bg-violet-50 dark:data-[hover=true]:bg-violet-950/30"
                     >
-                      Dashboard
+                      Dashboard jjjj
                     </DropdownItem>
 
                     <DropdownItem

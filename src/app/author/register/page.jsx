@@ -339,8 +339,8 @@ export default function Register() {
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                   >
-                    <option value="Tenant">Tenant (Rent Properties)</option>
-                    <option value="Owner">Owner (List Properties)</option>
+                    <option value="tenant">Tenant (Rent Properties)</option>
+                    <option value="owner">Owner (List Properties)</option>
                   </select>
                 </div>
 
