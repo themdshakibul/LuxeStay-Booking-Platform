@@ -32,12 +32,11 @@ export default function Login() {
 
     if (signinError) {
       toast.error(signinError.message);
+      console.log(signinError);
     } else {
       toast.success("Signed In Successfully!");
       redirect("/");
     }
-
-    console.log("Form Data:", data);
   };
 
   const handleGoogleLogin = async () => {

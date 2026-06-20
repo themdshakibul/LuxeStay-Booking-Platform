@@ -41,7 +41,7 @@ export default function HeroSection() {
   return (
     <div className="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans">
       {/* Hero Banner Section */}
-      <div className="relative min-h-[85vh] flex items-center justify-center bg-slate-950 overflow-hidden px-6">
+      <div className="relative min-h-[85vh] flex items-center justify-center bg-slate-950 overflow-hidden px-2">
         {/* Background Image with dark overlay */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 z-0 scale-105 transition-transform duration-10000"

@@ -27,9 +27,9 @@ const demoProperties = [
     bedrooms: 3,
     bathrooms: 3,
     propertySize: 1850,
-    images: [
+    images:
       "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80",
-    ],
+
     owner: "owner@example.com",
   },
   {
@@ -43,9 +43,9 @@ const demoProperties = [
     bedrooms: 4,
     bathrooms: 4,
     propertySize: 3200,
-    images: [
+    images:
       "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-    ],
+
     owner: "houseowner@gmail.com",
   },
   {
@@ -54,32 +54,15 @@ const demoProperties = [
     location: "Bashundhara, Dhaka",
     description:
       "Exclusive villa featuring private swimming pool and luxurious interiors.",
-    rent: 250000,
+    rent: 20000,
     rentType: "Monthly",
     propertyType: "Villa",
     bedrooms: 5,
     bathrooms: 5,
     propertySize: 5200,
-    images: [
+    images:
       "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
-    ],
     owner: "villa@luxury.com",
-  },
-  {
-    _id: "4",
-    title: "Cozy Studio in Uttara",
-    location: "Sector 10, Uttara",
-    description: "Perfect for singles or couples. Fully furnished and modern.",
-    rent: 35000,
-    rentType: "Monthly",
-    propertyType: "Studio",
-    bedrooms: 1,
-    bathrooms: 1,
-    propertySize: 650,
-    images: [
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
-    ],
-    owner: "studiohub@gmail.com",
   },
 ];
 
@@ -404,8 +387,8 @@ const AllPropertiesPage = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {properties.map((property) => (
-                <PropertyCard key={property._id} property={property} />
+              {demoProperties.map((demoP) => (
+                <PropertyCard key={demoP._id} property={demoP} />
               ))}
             </div>
 

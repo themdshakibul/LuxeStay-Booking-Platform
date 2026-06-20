@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardBody, Avatar } from "@nextui-org/react";
 import { FaStar } from "react-icons/fa";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Reviews() {
   const reviews = [
@@ -46,7 +47,7 @@ export default function Reviews() {
   ];
 
   return (
-    <section className="py-20 px-6 container mx-auto">
+    <section className="py-20 px-2 container mx-auto">
       <div className="text-center mb-16">
         <motion.span
           initial={{ opacity: 0 }}
@@ -98,11 +99,12 @@ export default function Reviews() {
 
                 {/* Profile detail */}
                 <div className="flex items-center gap-4 mt-2">
-                  <Avatar
+                  <Image
                     src={rev.photo}
-                    name={rev.name}
-                    size="md"
-                    className="ring-2 ring-violet-500/50"
+                    alt={rev.name}
+                    width={100}
+                    height={100}
+                    className="rounded-full w-11 h-11 object-cover ring-2 ring-violet-500/50"
                   />
                   <div>
                     <h4 className="font-bold text-white text-sm">{rev.name}</h4>

@@ -23,6 +23,7 @@ import Logo from "@/Components/Shared/Reusable/Logo";
 const DashboardSidebar = () => {
   const { data: session } = useSession();
   const user = session?.user;
+
   const pathname = usePathname();
   const role = user?.role;
 
@@ -120,10 +121,10 @@ const DashboardSidebar = () => {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-violet-600">
             <Image
-              src={user?.photo || "/placeholder.png"}
+              src={user?.image}
               alt="Avatar"
-              width={40}
-              height={40}
+              width={100}
+              height={100}
               className="object-cover"
             />
           </div>

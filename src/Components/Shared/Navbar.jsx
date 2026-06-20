@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link"; 
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
   Navbar as NextUINavbar,
@@ -110,15 +110,15 @@ export default function Navbar() {
                   className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/10 dark:shadow-black/40 p-0 overflow-hidden min-w-65"
                 >
                   <DropdownTrigger>
-                    <Avatar
-                      isBordered
-                      as="button"
-                      className="transition-all duration-200 ring-2 ring-violet-500/50 hover:ring-violet-500 hover:scale-105 w-9 h-9 text-xs cursor-pointer"
-                      color="primary"
-                      name={user.name || "User"}
-                      src={session.user.image || ""}
+                    <Image
+                      src={user.image}
+                      alt={user.name}
+                      width={100}
+                      height={100}
+                      className="rounded-full w-11 h-11 object-cover"
                     />
                   </DropdownTrigger>
+
                   <DropdownMenu
                     aria-label="Profile Actions"
                     variant="flat"
@@ -131,12 +131,12 @@ export default function Navbar() {
                       className="h-auto py-3 px-3 mb-1 rounded-xl bg-linear-to-br from-violet-50 to-indigo-50 dark:from-violet-950/40 dark:to-indigo-950/40 cursor-default"
                     >
                       <div className="flex items-center gap-3">
-                        <Avatar
-                          isBordered
-                          className="w-10 h-10 ring-2 ring-violet-500/40 text-xs shrink-0"
-                          color="primary"
-                          name={user.name || "User"}
-                          src={user.image || ""}
+                        <Image
+                          src={user.image}
+                          alt={user.name}
+                          width={100}
+                          height={100}
+                          className="rounded-full w-11 h-11 object-cover"
                         />
                         <div className="flex flex-col min-w-0">
                           <p className="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">
@@ -165,7 +165,7 @@ export default function Navbar() {
                       }
                       className="rounded-xl py-2.5 px-3 text-xs font-semibold data-[hover=true]:bg-violet-50 dark:data-[hover=true]:bg-violet-950/30"
                     >
-                      Dashboard jjjj
+                      Dashboard
                     </DropdownItem>
 
                     <DropdownItem
@@ -216,7 +216,7 @@ export default function Navbar() {
           </NavbarContent>
         </NextUINavbar>
 
-        {/* ==================== Mobile Menu ==================== */}
+        {/* Mobile Menu */}
         <div
           className={`fixed left-0 right-0 top-14 sm:top-16 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 shadow-xl transition-all duration-300 ease-in-out z-40 lg:hidden overflow-hidden ${
             isMenuOpen

@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Card, CardBody, Button, Image } from "@nextui-org/react";
+import { Card, CardBody, Button } from "@nextui-org/react";
 import { MdLocationOn } from "react-icons/md";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function PropertyCard({ property }) {
   const router = useRouter();
@@ -24,15 +25,17 @@ export default function PropertyCard({ property }) {
         {/* Image Section */}
         <div className="relative aspect-4/3 overflow-hidden">
           <Image
+            width={300}
+            height={300}
             alt={property.title}
             src={
-              (property.images && property.images[0]) ||
-              property.image ||
-              "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80"
+              property?.images ||
+              "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
             }
             className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
             radius="none"
           />
+
           <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-300 shadow">
             {property.propertyType}
           </div>

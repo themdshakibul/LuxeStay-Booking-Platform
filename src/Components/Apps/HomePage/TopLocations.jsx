@@ -1,8 +1,9 @@
 "use client";
 
 import React from "react";
-import { Card, Image } from "@nextui-org/react";
+import { Card } from "@nextui-org/react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function TopLocations() {
@@ -12,33 +13,33 @@ export default function TopLocations() {
       state: "Florida",
       properties: 120,
       image:
-        "https://images.unsplash.com/photo-1535498730771-e735b998cd64?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1562517634-baa2da3acfbf?q=80&w=1074&auto=format&fit=crop",
     },
     {
       city: "New York",
       state: "New York",
       properties: 85,
       image:
-        "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1170&auto=format&fit=crop",
     },
     {
       city: "Los Angeles",
       state: "California",
       properties: 94,
       image:
-        "https://images.unsplash.com/photo-1422490987153-62f936261270?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1429554429301-1c7d5ae2d42e?q=80&w=1170&auto=format&fit=crop",
     },
     {
       city: "Aspen",
       state: "Colorado",
       properties: 42,
       image:
-        "https://images.unsplash.com/photo-1548848221-0c2eaad81f58?auto=format&fit=crop&w=400&q=80",
+        "https://plus.unsplash.com/premium_photo-1733342541985-35432ba0244c?q=80&w=1224&auto=format&fit=crop",
     },
   ];
 
   return (
-    <section className="py-20 px-6 container mx-auto">
+    <section className="py-20 px-2 container mx-auto">
       <div className="text-center mb-16">
         <motion.span
           initial={{ opacity: 0 }}
@@ -76,18 +77,15 @@ export default function TopLocations() {
             transition={{ duration: 0.4, delay: index * 0.1 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href={`/properties?search=${loc.city}`}>
+            <Link href={"/"}>
               <Card className="h-64 relative overflow-hidden group cursor-pointer border border-slate-800">
                 <Image
+                  fill
                   src={loc.image}
                   alt={loc.city}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  radius="none"
                 />
-                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-900/40 to-transparent z-10" />
-
-                {/* Location text details */}
                 <div className="absolute bottom-6 left-6 z-20">
                   <h3 className="text-xl font-bold text-white tracking-wide">
                     {loc.city}
