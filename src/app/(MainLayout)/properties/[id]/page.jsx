@@ -72,7 +72,7 @@ export default function PropertyDetailsPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#020618] text-slate-900 dark:text-slate-100 py-12 px-4 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
+      <div className="container mx-auto px-2">
         {/* Header */}
         <div className="mb-10">
           <h1 className="text-5xl font-black">{property.title}</h1>

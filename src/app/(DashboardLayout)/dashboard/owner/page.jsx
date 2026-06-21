@@ -223,7 +223,7 @@ export default function OwnerAnalytics() {
             Analytics Dashboard
           </h1>
           <p className="text-slate-400 text-xs mt-1">
-            Real-time statistics of payouts, occupancy, and properties
+            Real-time statistics of payouts, occupancy, and properties 
           </p>
         </div>
 

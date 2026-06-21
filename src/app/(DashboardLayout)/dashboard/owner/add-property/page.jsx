@@ -1,21 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Card,
-  CardBody,
-  Input,
-  Textarea,
-  Button,
-  Checkbox,
-} from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { Card, CardBody, Input, Button, Checkbox } from "@nextui-org/react";
 import { TextArea } from "@heroui/react";
+import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { addProperty } from "@/lib/api/Add-Properties/action";
+import { redirect } from "next/navigation";
 
 export default function AddProperty() {
-  const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
+  const { data } = authClient.useSession();
+  const user = data?.user;
 
+  const [submitting, setSubmitting] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
@@ -53,15 +50,47 @@ export default function AddProperty() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = {
+      title,
+      description,
+      location,
+      propertyType,
+      rent,
+      rentType,
+      bedrooms,
+      bathrooms,
+      propertySize,
+      images,
+      amenities,
+      extraFeatures,
+      status: "Pending",
+      ownerEmail: user?.email,
+    };
+
+    const resData = await addProperty(data);
+    if (resData.insertedId) {
+      toast.success("Property added successfully!");
+      redirect("/dashboard/owner/properties");
+    } else {
+      toast.error("Failed to add property!");
+    }
+
     setSubmitting(true);
-    // Add logic here
-    console.log({ title, location, amenities });
-    setSubmitting(false);
+
+    setTimeout(() => setSubmitting(false), 2000);
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/*  */}
+    <div className="container mx-auto">
+      <div className="mb-8">
+        <h1 className="text-2xl font-black text-white tracking-tight">
+          Add New Property
+        </h1>
+        <p className="text-slate-400 text-xs mt-1">
+          Submit property parameters for administrative review
+        </p>
+      </div>
 
       <Card className="bg-slate-950 border border-slate-800 p-6 md:p-8 shadow-xl">
         <CardBody className="p-0">
@@ -72,12 +101,14 @@ export default function AddProperty() {
                 value={title}
                 onChange={setTitle}
                 placeholder="Luxury Apartment"
+                required
               />
               <InputField
                 label="Location"
                 value={location}
                 onChange={setLocation}
                 placeholder="Khulna, Bangladesh"
+                required
               />
               <SelectField
                 label="Property Type"
@@ -97,6 +128,7 @@ export default function AddProperty() {
                 value={rent}
                 onChange={setRent}
                 placeholder="15000"
+                required
               />
               <InputField
                 label="Property Size (sqft)"
@@ -104,6 +136,7 @@ export default function AddProperty() {
                 value={propertySize}
                 onChange={setPropertySize}
                 placeholder="1200"
+                required
               />
               <InputField
                 label="Bedrooms"
@@ -111,6 +144,7 @@ export default function AddProperty() {
                 value={bedrooms}
                 onChange={setBedrooms}
                 placeholder="2"
+                required
               />
               <InputField
                 label="Bathrooms"
@@ -118,6 +152,7 @@ export default function AddProperty() {
                 value={bathrooms}
                 onChange={setBathrooms}
                 placeholder="2"
+                required
               />
               <InputField
                 label="Extra Features"
@@ -129,8 +164,8 @@ export default function AddProperty() {
                 label="Image URL"
                 value={images}
                 onChange={setImages}
-                clglassName=""
                 placeholder="Cloudinary / Imgbb URL"
+                required
               />
             </div>
 
@@ -138,8 +173,8 @@ export default function AddProperty() {
               <label className="text-sm font-medium text-slate-300">
                 Description
               </label>
-
               <TextArea
+                isRequired
                 minRows={3}
                 placeholder="Write property details..."
                 value={description}
@@ -151,27 +186,62 @@ export default function AddProperty() {
               />
             </div>
 
-            {/* Amenities Section - 2 Lines Professional Look */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {defaultAmenities.map((amenity) => (
-                <Checkbox
-                  key={amenity}
-                  isSelected={amenities.includes(amenity)}
-                  onValueChange={(selected) => {
-                    selected
-                      ? setAmenities([...amenities, amenity])
-                      : setAmenities(
-                          amenities.filter((item) => item !== amenity),
-                        );
-                  }}
-                  classNames={{
-                    base: "flex items-center gap-6",
-                    label: "text-sm font-medium text-slate-300",
-                  }}
-                >
-                  {amenity}
-                </Checkbox>
-              ))}
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-semibold text-slate-300">
+                  Amenities
+                </label>
+                <span className="text-xs text-slate-500">
+                  {amenities.length} selected
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 bg-slate-900/50 p-4 rounded-xl border border-slate-800">
+                {defaultAmenities.map((amenity) => {
+                  const selected = amenities.includes(amenity);
+                  return (
+                    <button
+                      key={amenity}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() =>
+                        setAmenities(
+                          selected
+                            ? amenities.filter((a) => a !== amenity)
+                            : [...amenities, amenity],
+                        )
+                      }
+                      className={`flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium text-left transition-colors duration-150 ${
+                        selected
+                          ? "bg-violet-500/15 border-violet-500 text-violet-300"
+                          : "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-600 hover:text-slate-300"
+                      }`}
+                    >
+                      <span
+                        className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors duration-150 ${
+                          selected
+                            ? "bg-violet-500 border-violet-500"
+                            : "border-slate-600"
+                        }`}
+                      >
+                        {selected && (
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="white"
+                            strokeWidth="3"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-2.5 w-2.5"
+                          >
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </span>
+                      {amenity}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <Button
@@ -190,11 +260,19 @@ export default function AddProperty() {
 }
 
 // Helper Components
-function InputField({ label, type = "text", value, onChange, placeholder }) {
+function InputField({
+  label,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  required = false,
+}) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-slate-300">{label}</label>
       <Input
+        isRequired={required}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -208,11 +286,12 @@ function InputField({ label, type = "text", value, onChange, placeholder }) {
   );
 }
 
-function SelectField({ label, value, onChange, options }) {
+function SelectField({ label, value, onChange, options, required = false }) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-slate-300">{label}</label>
       <select
+        required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="bg-slate-900 border border-slate-700 rounded-xl p-3 text-white w-full outline-none focus:border-blue-500"
