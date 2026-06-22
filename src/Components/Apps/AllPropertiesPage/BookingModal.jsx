@@ -1,104 +1,62 @@
-// "use client";
-// import React from "react";
-// import {
-//   Modal,
-//   ModalContent,
-//   ModalHeader,
-//   ModalBody,
-//   ModalFooter,
-//   Button,
-//   Input,
-// } from "@nextui-org/react";
-
-// export default function BookingModal({ isOpen, onOpenChange }) {
-//   return (
-//     <Modal
-//       isOpen={isOpen}
-//       onOpenChange={onOpenChange}
-//       placement="center"
-//       backdrop="blur"
-//       className="dark:bg-[#0f172a] rounded-2xl p-2"
-//     >
-//       <ModalContent>
-//         {(onClose) => (
-//           <>
-//             <ModalHeader className="p-10">Booking Request</ModalHeader>
-//             <ModalBody className="py-4 gap-6">
-//               {/* User Name */}
-//               <div className="flex flex-col gap-1">
-//                 <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-//                   User Name
-//                 </span>
-//                 <Input
-//                   defaultValue="Programming-Hero Instructor"
-//                   variant="bordered"
-//                   color="primary"
-//                 />
-//               </div>
-
-//               {/* Email */}
-//               <div className="flex flex-col gap-1">
-//                 <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-//                   Email
-//                 </span>
-//                 <Input
-//                   defaultValue="owner@gmail.com"
-//                   variant="bordered"
-//                   color="primary"
-//                 />
-//               </div>
-
-//               {/* Phone */}
-//               <div className="flex flex-col gap-1">
-//                 <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-//                   Phone
-//                 </span>
-//                 <Input
-//                   placeholder="017XXXXXXXX"
-//                   variant="bordered"
-//                   color="primary"
-//                 />
-//               </div>
-
-//               {/* Date */}
-//               <div className="flex flex-col gap-1">
-//                 <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-//                   Preferred Booking Date
-//                 </span>
-//                 <Input type="date" variant="bordered" color="primary" />
-//               </div>
-//             </ModalBody>
-//             <ModalFooter>
-//               <Button variant="flat" color="danger" onPress={onClose}>
-//                 Cancel
-//               </Button>
-//               <Button color="primary" className="font-bold" onPress={onClose}>
-//                 Confirm Booking
-//               </Button>
-//             </ModalFooter>
-//           </>
-//         )}
-//       </ModalContent>
-//     </Modal>
-//   );
-// }
-
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button,
   Input,
 } from "@nextui-org/react";
+import toast from "react-hot-toast";
+import { Button } from "@heroui/react";
 
-export default function BookingModal({ isOpen, onOpenChange }) {
-  const onClick = (e) => {
+export default function BookingModal({ isOpen, onOpenChange, user, property }) {
+  const [phone, setPhone] = useState("");
+  const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("clicked");
+
+    if (!phone || !date) {
+      toast.error("Please fill all fields!");
+      return;
+    }
+
+    setLoading(true);
+
+    const bookingData = {
+      userName: user?.name,
+      email: user?.email,
+      phone,
+      date,
+      propertyId: property?._id,
+      propertyTitle: property?.title,
+      propertyPrice: property?.rent,
+      bookingStatus: "Pending",
+      ownerEmail: property?.ownerEmail,
+    };
+
+    try {
+      const res = await fetch("/api/checkout_session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bookingData),
+      });
+
+      const data = await res.json();
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("Payment session error!");
+      }
+    } catch (err) {
+      toast.error("Payment session error!");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -111,7 +69,7 @@ export default function BookingModal({ isOpen, onOpenChange }) {
     >
       <ModalContent>
         {(onClose) => (
-          <form onClick={onClick}>
+          <form onSubmit={handleSubmit}>
             <ModalHeader className="pt-10">Booking Request</ModalHeader>
             <ModalBody className="py-4 gap-6">
               {/* User Name */}
@@ -120,8 +78,8 @@ export default function BookingModal({ isOpen, onOpenChange }) {
                   User Name
                 </span>
                 <Input
-                  isRequired
-                  defaultValue="Md Shakibul Islam"
+                  isReadOnly
+                  value={user?.name || ""}
                   variant="bordered"
                   color="primary"
                 />
@@ -133,9 +91,9 @@ export default function BookingModal({ isOpen, onOpenChange }) {
                   Email
                 </span>
                 <Input
-                  isRequired
+                  isReadOnly
                   type="email"
-                  defaultValue="owner@gmail.com"
+                  value={user?.email || ""}
                   variant="bordered"
                   color="primary"
                 />
@@ -148,8 +106,10 @@ export default function BookingModal({ isOpen, onOpenChange }) {
                 </span>
                 <Input
                   isRequired
-                  type="tel"
-                  placeholder="017XXXXXXXX"
+                  type="number"
+                  placeholder="0196XXXXXXX"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                   variant="bordered"
                   color="primary"
                 />
@@ -163,6 +123,8 @@ export default function BookingModal({ isOpen, onOpenChange }) {
                 <Input
                   isRequired
                   type="date"
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   variant="bordered"
                   color="primary"
                 />
@@ -172,8 +134,14 @@ export default function BookingModal({ isOpen, onOpenChange }) {
               <Button variant="flat" color="danger" onPress={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" color="primary" className="font-bold">
-                Confirm Booking
+              <Button
+                type="submit"
+                color="primary"
+                className="font-bold"
+                isLoading={loading}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "Confirm Booking"}
               </Button>
             </ModalFooter>
           </form>

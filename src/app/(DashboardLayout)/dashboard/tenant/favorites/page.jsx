@@ -89,17 +89,17 @@ const FaveritesPage = () => {
             className="text-slate-200"
             classNames={{
               wrapper: "bg-slate-950 shadow-none p-0",
-              th: "bg-slate-900 text-slate-300 font-bold text-xs border-b border-slate-800 py-4",
+              th: "bg-slate-900 text-slate-300 font-bold text-xs text-left border-b border-slate-800 py-4",
               td: "border-b border-slate-900 py-4 text-xs font-semibold",
             }}
           >
             <TableHeader>
-              <TableColumn className="text-left">PROPERTY NAME</TableColumn>
-              <TableColumn className="text-left">TYPE</TableColumn>
-              <TableColumn className="text-left">LOCATION</TableColumn>
-              <TableColumn className="text-left">RENT PRICE</TableColumn>
-              <TableColumn className="text-left">BATHROOMS</TableColumn>
-              <TableColumn className="text-left">BEDROOMS</TableColumn>
+              <TableColumn>Property Name</TableColumn>
+              <TableColumn>Type</TableColumn>
+              <TableColumn>Location</TableColumn>
+              <TableColumn>Rent Price</TableColumn>
+              <TableColumn>BathRooms</TableColumn>
+              <TableColumn>BEDROOMS</TableColumn>
               <TableColumn className="text-center">ACTIONS</TableColumn>
             </TableHeader>
             <TableBody>

@@ -14,7 +14,8 @@ import {
 } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 
-const allProperties = await myAllProperties();
+const allPropertiesData = await myAllProperties();
+const allProperties = allPropertiesData.filter((p) => p.status === "Approved");
 
 const AllPropertiesPage = () => {
   const router = useRouter();
@@ -97,7 +98,6 @@ const AllPropertiesPage = () => {
     fetchProperties();
   }, [fetchProperties]);
 
-  // const updateURL = useCallback(
   //   (newParams = {}) => {
   //     const params = new URLSearchParams(searchParams.toString());
   //     Object.entries(newParams).forEach(([key, value]) => {

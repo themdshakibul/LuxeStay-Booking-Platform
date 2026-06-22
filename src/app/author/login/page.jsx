@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
@@ -28,14 +28,13 @@ export default function Login() {
         password: data.password,
       });
 
-    console.log({ signinData, signinError });
+    if (signinData) {
+      toast.success("Signed In Successfully!");
+      redirect("/");
+    }
 
     if (signinError) {
       toast.error(signinError.message);
-      console.log(signinError);
-    } else {
-      toast.success("Signed In Successfully!");
-      redirect("/");
     }
   };
 

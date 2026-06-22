@@ -21,11 +21,16 @@ import Review from "@/Components/Apps/AllPropertiesPage/Review";
 import { authClient } from "@/lib/auth-client";
 import { addFevoritesCard } from "@/lib/api/Tenent/action";
 import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 export default function PropertyDetailsPage({ params }) {
   const { id } = use(params);
   const { data } = authClient.useSession();
   const user = data?.user;
+
+  // if (!user) {
+  //   redirect("/author/login");
+  // }
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -207,7 +212,12 @@ export default function PropertyDetailsPage({ params }) {
                   Book Now
                 </Button>
 
-                <BookingModal isOpen={isOpen} onOpenChange={onOpenChange} />
+                <BookingModal
+                  isOpen={isOpen}
+                  onOpenChange={onOpenChange}
+                  user={user}
+                  property={property}
+                />
 
                 <Button
                   size="lg"

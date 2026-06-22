@@ -29,13 +29,15 @@ import { useSession } from "@/lib/auth-client";
 import { myProperties } from "@/lib/api/Add-Properties/data";
 import EditPropertiesModal from "@/Components/Apps/Dashboard/OwnerPage/PropertiesPage/EditPropertiesModal";
 import { deleteProperty } from "@/lib/api/Add-Properties/action";
-import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function MyProperties() {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(true);
   const [properties, setProperties] = useState([]);
+
+  const router = useRouter();
 
   // State for Rejection Feedback Modal
   const [selectedFeedback, setSelectedFeedback] = useState("");
@@ -58,7 +60,6 @@ export default function MyProperties() {
     setLoading(true);
     try {
       const propertiesData = await myProperties(session?.user?.email);
-      console.log(propertiesData);
       setProperties(propertiesData);
     } catch (error) {
     } finally {
@@ -111,15 +112,14 @@ export default function MyProperties() {
             Review active, pending, or rejected property listings
           </p>
         </div>
-        <Link href="/dashboard/owner/add-property">
-          <Button
-            size="sm"
-            color="primary"
-            className="bg-violet-600 font-bold text-white shadow-lg"
-          >
-            Add New Property
-          </Button>
-        </Link>
+        <Button
+          size="sm"
+          color="primary"
+          className="bg-violet-600 font-bold text-white shadow-lg"
+          onPress={() => router.push("/dashboard/owner/add-property")}
+        >
+          Add New Property
+        </Button>
       </div>
 
       {loading ? (
