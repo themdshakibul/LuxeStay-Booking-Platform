@@ -1,6 +1,7 @@
 "use client";
 
 import PropertyCard from "@/Components/Apps/HomePage/PropertyCard";
+import { myAllProperties } from "@/lib/api/CardData/data";
 import { Button, Input, Pagination, ComboBox, ListBox } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useCallback, useMemo } from "react";
@@ -13,58 +14,7 @@ import {
 } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 
-// Demo Data
-const demoProperties = [
-  {
-    _id: "1",
-    title: "Luxury Ocean View Apartment",
-    location: "Gulshan-2, Dhaka",
-    description:
-      "Stunning 3 bedroom apartment with breathtaking city and lake views.",
-    rent: 125000,
-    rentType: "Monthly",
-    propertyType: "Apartment",
-    bedrooms: 3,
-    bathrooms: 3,
-    propertySize: 1850,
-    images:
-      "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80",
-
-    owner: "owner@example.com",
-  },
-  {
-    _id: "2",
-    title: "Modern Family House",
-    location: "Banani, Dhaka",
-    description: "Spacious family home with garden and rooftop terrace.",
-    rent: 85000,
-    rentType: "Monthly",
-    propertyType: "House",
-    bedrooms: 4,
-    bathrooms: 4,
-    propertySize: 3200,
-    images:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-
-    owner: "houseowner@gmail.com",
-  },
-  {
-    _id: "3",
-    title: "Premium Villa with Pool",
-    location: "Bashundhara, Dhaka",
-    description:
-      "Exclusive villa featuring private swimming pool and luxurious interiors.",
-    rent: 20000,
-    rentType: "Monthly",
-    propertyType: "Villa",
-    bedrooms: 5,
-    bathrooms: 5,
-    propertySize: 5200,
-    images:
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80",
-    owner: "villa@luxury.com",
-  },
-];
+const allProperties = await myAllProperties();
 
 const AllPropertiesPage = () => {
   const router = useRouter();
@@ -109,7 +59,7 @@ const AllPropertiesPage = () => {
     setError(null);
 
     setTimeout(() => {
-      let filtered = [...demoProperties];
+      let filtered = [...allProperties];
 
       if (debouncedSearch) {
         const term = debouncedSearch.toLowerCase();
@@ -144,30 +94,29 @@ const AllPropertiesPage = () => {
   }, [debouncedSearch, propertyType, sort, minPrice, maxPrice]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProperties();
   }, [fetchProperties]);
 
-  const updateURL = useCallback(
-    (newParams = {}) => {
-      const params = new URLSearchParams(searchParams.toString());
-      Object.entries(newParams).forEach(([key, value]) => {
-        if (value && value !== "" && value !== "All" && value !== "newest") {
-          params.set(key, value);
-        } else {
-          params.delete(key);
-        }
-      });
-      if (!newParams.page) params.set("page", "1");
-      router.push(`/properties?${params.toString()}`, { scroll: false });
-    },
-    [router, searchParams],
-  );
+  // const updateURL = useCallback(
+  //   (newParams = {}) => {
+  //     const params = new URLSearchParams(searchParams.toString());
+  //     Object.entries(newParams).forEach(([key, value]) => {
+  //       if (value && value !== "" && value !== "All" && value !== "newest") {
+  //         params.set(key, value);
+  //       } else {
+  //         params.delete(key);
+  //       }
+  //     });
+  //     if (!newParams.page) params.set("page", "1");
+  //     router.push(`/properties?${params.toString()}`, { scroll: false });
+  //   },
+  //   [router, searchParams],
+  // );
 
-  const handleFilterChange = (key, value) => {
-    setPage(1);
-    updateURL({ [key]: value });
-  };
+  // const handleFilterChange = (key, value) => {
+  //   setPage(1);
+  //   updateURL({ [key]: value });
+  // };
 
   const handleClearFilters = () => {
     setSearch("");
@@ -387,8 +336,8 @@ const AllPropertiesPage = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {demoProperties.map((demoP) => (
-                <PropertyCard key={demoP._id} property={demoP} />
+              {allProperties.map((property) => (
+                <PropertyCard key={property._id} property={property} />
               ))}
             </div>
 

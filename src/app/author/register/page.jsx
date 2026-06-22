@@ -12,6 +12,7 @@ import { FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
 import { UploadImage } from "@/lib/utils/imageupload";
 import { authClient } from "@/lib/auth-client";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const inputWrapperClasses = [
   "bg-slate-900 border border-slate-800",
@@ -93,14 +94,19 @@ export default function Register() {
       toast.success("Account created successfully!");
       redirect("/");
     }
-
-    console.log("Form Data:", signUpData);
   };
 
   const handleGoogleLogin = async () => {
     const data = await authClient.signIn.social({
       provider: "google",
     });
+
+    if (data) {
+      toast.success("Signed In Successfully!");
+      redirect("/");
+    } else {
+      toast.error(data.error.message);
+    }
   };
 
   return (
@@ -116,7 +122,7 @@ export default function Register() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md relative z-10"
         >
-          <Card className="bg-slate-950 border border-slate-800 shadow-2xl p-6 sm:p-8">
+          <Card className="bg-slate-950 border rounded-2xl border-slate-800 shadow-2xl p-6 sm:p-8">
             <CardBody className="flex flex-col gap-6">
               <div className="text-center">
                 <h2 className="text-2xl font-black text-white tracking-tight">
@@ -137,8 +143,9 @@ export default function Register() {
                   <div className="relative">
                     <div className="w-20 h-20 rounded-full bg-slate-900 border-2 border-dashed border-slate-700 flex items-center justify-center overflow-hidden">
                       {photoPreview ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
+                          width={100}
+                          height={100}
                           src={photoPreview}
                           alt="Profile preview"
                           className="w-full h-full object-cover"

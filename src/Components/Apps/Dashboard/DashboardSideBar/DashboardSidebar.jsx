@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { redirect, usePathname } from "next/navigation";
 import Image from "next/image";
@@ -50,8 +49,8 @@ const DashboardSidebar = () => {
         icon: MdFavorite,
       },
       {
-        label: "Profile Settings",
-        href: "/dashboard/tenant/profile",
+        label: "Profile",
+        href: "/dashboard/profile",
         icon: MdOutlineAccountCircle,
       },
     ],
@@ -77,7 +76,7 @@ const DashboardSidebar = () => {
         icon: MdOutlineCheckCircleOutline,
       },
       {
-        label: "Profile Settings",
+        label: "Profile",
         href: "/dashboard/profile",
         icon: MdOutlineAccountCircle,
       },
@@ -122,7 +121,7 @@ const DashboardSidebar = () => {
           <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-violet-600">
             <Image
               src={user?.image}
-              alt="Avatar"
+              alt={user?.name}
               width={100}
               height={100}
               className="object-cover w-full h-full"

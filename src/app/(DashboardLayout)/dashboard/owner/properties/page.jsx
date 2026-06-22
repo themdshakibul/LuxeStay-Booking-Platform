@@ -29,7 +29,7 @@ import { useSession } from "@/lib/auth-client";
 import { myProperties } from "@/lib/api/Add-Properties/data";
 import EditPropertiesModal from "@/Components/Apps/Dashboard/OwnerPage/PropertiesPage/EditPropertiesModal";
 import { deleteProperty } from "@/lib/api/Add-Properties/action";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function MyProperties() {
@@ -58,6 +58,7 @@ export default function MyProperties() {
     setLoading(true);
     try {
       const propertiesData = await myProperties(session?.user?.email);
+      console.log(propertiesData);
       setProperties(propertiesData);
     } catch (error) {
     } finally {
@@ -75,11 +76,11 @@ export default function MyProperties() {
 
   const handleDelete = async (id) => {
     const res = await deleteProperty(id);
-    if (res?.success) {
-      toast.error(res?.message);
-    } else {
+    if (res) {
+      fetchProperties();
       toast.success("Property deleted successfully");
-      redirect("/dashboard/owner/properties");
+    } else {
+      toast.error(res?.message);
     }
   };
 
@@ -274,6 +275,7 @@ export default function MyProperties() {
         onOpenChange={onEditOpenChange}
         propertyData={selectedProperty}
         onSuccess={fetchProperties}
+        fetchProperties={fetchProperties}
       />
     </div>
   );

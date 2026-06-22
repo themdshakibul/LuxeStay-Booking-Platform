@@ -43,6 +43,13 @@ export default function Login() {
     const data = await authClient.signIn.social({
       provider: "google",
     });
+
+    if (data) {
+      toast.success("Signed In Successfully!");
+      redirect("/");
+    } else {
+      toast.error(data.error.message);
+    }
   };
 
   return (
@@ -58,7 +65,7 @@ export default function Login() {
           transition={{ duration: 0.5 }}
           className="w-full max-w-md relative z-10"
         >
-          <Card className="bg-slate-950/80 backdrop-blur-md border-none shadow-2xl p-6 sm:p-8">
+          <Card className="bg-slate-950/80 rounded-2xl backdrop-blur-md border-none shadow-2xl p-6 sm:p-8">
             <CardBody className="flex flex-col gap-6">
               <div className="text-center">
                 <h2 className="text-2xl font-black text-white tracking-tight">

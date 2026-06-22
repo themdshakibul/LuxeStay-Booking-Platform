@@ -20,6 +20,8 @@ export const deleteMutaiton = async (path) => {
 };
 
 export const serverFetch = async (path) => {
-  const res = await fetch(`${BaseUrl}${path}`);
+  const res = await fetch(`${BaseUrl}${path}`, {
+    cache: "no-store",
+  });
   return res.json();
 };

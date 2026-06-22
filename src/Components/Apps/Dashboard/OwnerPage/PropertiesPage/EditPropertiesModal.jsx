@@ -41,7 +41,7 @@ const EditPropertiesModal = ({
   isOpen,
   onOpenChange,
   propertyData,
-  onSuccess,
+  fetchProperties,
 }) => {
   const [updating, setUpdating] = useState(false);
   const formRef = useRef(null);
@@ -79,6 +79,7 @@ const EditPropertiesModal = ({
     const resData = await upDateProperty(payload, propertyData?._id);
 
     if (resData) {
+      fetchProperties();
       toast.success("Property updated successfully!");
     } else {
       toast.error(resData?.message);

@@ -1,6 +1,6 @@
 import Footer from "@/Components/Shared/Footer";
 import Navbar from "@/Components/Shared/Navbar";
-import { Providers } from "@/Components/Shared/ThemeProvider/providers";
+import { Providers } from "@/Components/Shared/ThemeProvider/Providers";
 
 const MainLayout = ({ children }) => {
   return (

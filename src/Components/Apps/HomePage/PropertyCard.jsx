@@ -28,10 +28,7 @@ export default function PropertyCard({ property }) {
             width={300}
             height={300}
             alt={property.title}
-            src={
-              property?.images ||
-              "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
-            }
+            src={property?.images}
             className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
             radius="none"
           />

@@ -51,7 +51,7 @@ export default function AddProperty() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = {
+    const payload = {
       title,
       description,
       location,
@@ -68,8 +68,8 @@ export default function AddProperty() {
       ownerEmail: user?.email,
     };
 
-    const resData = await addProperty(data);
-    if (resData.insertedId) {
+    const resData = await addProperty(payload);
+    if (resData?.insertedId) {
       toast.success("Property added successfully!");
       redirect("/dashboard/owner/properties");
     } else {

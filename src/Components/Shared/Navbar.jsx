@@ -13,7 +13,6 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Avatar,
 } from "@nextui-org/react";
 import {
   MdHome,
@@ -111,8 +110,8 @@ export default function Navbar() {
                 >
                   <DropdownTrigger>
                     <Image
-                      src={user.image}
-                      alt={user.name}
+                      src={user?.image}
+                      alt={user?.name}
                       width={100}
                       height={100}
                       className="rounded-full w-11 h-11 object-cover"
@@ -132,8 +131,8 @@ export default function Navbar() {
                     >
                       <div className="flex items-center gap-3">
                         <Image
-                          src={user.image}
-                          alt={user.name}
+                          src={user?.image}
+                          alt={user?.name}
                           width={100}
                           height={100}
                           className="rounded-full w-11 h-11 object-cover"
@@ -228,12 +227,12 @@ export default function Navbar() {
           {user && (
             <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/50 rounded-xl border border-slate-100 dark:border-slate-900">
               <div className="flex items-center gap-3 truncate">
-                <Avatar
-                  isBordered
-                  className="w-10 h-10 ring-2 ring-violet-500/50 text-xs shrink-0"
-                  color="primary"
-                  name={user.name || "User"}
-                  src={user.image || ""}
+                <Image
+                  src={user?.image}
+                  alt={user?.name}
+                  width={100}
+                  height={100}
+                  className="rounded-full w-11 h-11 object-cover ring-2 ring-violet-500/50 text-xs shrink-0"
                 />
                 <div className="flex flex-col truncate">
                   <p className="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">
