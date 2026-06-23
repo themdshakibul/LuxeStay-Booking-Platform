@@ -3,6 +3,7 @@ import Link from "next/link";
 import { myBookingProperties } from "@/lib/api/Tenent/action";
 import { Button } from "@heroui/react";
 import { myPropertiesPayment } from "@/lib/api/OwnerPayments/action";
+import { phoneNumber } from "better-auth/plugins";
 
 export default async function SuccessPage({ searchParams }) {
   const params = await searchParams;
@@ -79,6 +80,7 @@ export default async function SuccessPage({ searchParams }) {
         paymentStatus: "Paid",
         bookingStatus: "Pending",
         stripeSessionId: sessionId,
+        phoneNumber: phoneNumber(phone),  
         paidAt: new Date().toISOString(),
       };
 
