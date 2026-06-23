@@ -4,13 +4,22 @@ import React from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { MdLocationOn } from "react-icons/md";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Image from "next/image";
+import { authClient } from "@/lib/auth-client";
 
 export default function PropertyCard({ property }) {
   const router = useRouter();
 
+  const { data } = authClient.useSession();
+  const user = data?.user;
+  // console.log(user);
+
   const handleViewDetails = () => {
+    if (!user) {
+      redirect("/author/login");
+    }
+
     router.push(`/properties/${property._id}`);
   };
 

@@ -14,3 +14,13 @@ export const getBookingProperties = async (email) => {
   const result = await serverFetch(`/api/booking/${email}`);
   return result;
 };
+
+export async function getPropertyReviews(propertyId) {
+  const res = await serverFetch(`/api/reviews/${propertyId}`);
+  return res;
+}
+
+export async function getUserReviews(email) {
+  const res = await serverFetch(`/api/reviews/user/${email}`);
+  return res;
+}

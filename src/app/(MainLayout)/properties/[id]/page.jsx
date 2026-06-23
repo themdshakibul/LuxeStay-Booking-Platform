@@ -53,26 +53,6 @@ export default function PropertyDetailsPage({ params }) {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  // console.log(property);
-  // const hadelFevorites = async () => {
-  //   const payload = {
-  //     title: property.title,
-  //     propertyType: property.propertyType,
-  //     location: property.location,
-  //     rent: property.rent,
-  //     bathrooms: property.bathrooms,
-  //     bedrooms: property.bedrooms,
-  //     email: user?.email,
-  //     favoritesId: property._id,
-  //   };
-
-  //   const resData = await addFevoritesCard(payload);
-
-  //   if (resData) {
-  //     toast.success("Property added to favorites!");
-  //   }
-  // };
-
   const hadelFevorites = async () => {
     const payload = {
       title: property.title,
@@ -209,7 +189,7 @@ export default function PropertyDetailsPage({ params }) {
             </div>
 
             {/* reviews & reating */}
-            <Review />
+            <Review propertyId={id} />
           </div>
 
           <div className="lg:col-span-1">

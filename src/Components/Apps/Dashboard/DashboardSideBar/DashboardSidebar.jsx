@@ -246,7 +246,7 @@ const DashboardSidebar = () => {
         icon: MdOutlineApartment,
       },
       {
-        label: "Booking Requests",
+        label: "Booking",
         href: "/dashboard/owner/bookings",
         icon: MdOutlineCheckCircleOutline,
       },

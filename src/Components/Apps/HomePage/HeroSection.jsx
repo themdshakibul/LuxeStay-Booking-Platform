@@ -53,7 +53,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-950/80 to-slate-950/40 z-10" />
 
         {/* Hero Content */}
-        <div className="relative z-20 max-w-4xl text-center flex flex-col items-center gap-6 mt-8">
+        <div className="relative z-20 max-w-7xl text-center flex flex-col items-center gap-6 mt-8">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,58 +91,61 @@ export default function HeroSection() {
           {/* Search Bar Form */}
           <motion.form
             onSubmit={handleSearch}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.45, ease: "easeOut" }}
-            className="w-full bg-slate-900/40 border border-slate-800/60 backdrop-blur-xl p-5 sm:p-6 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mt-8 text-left items-end"
+            className="w-full bg-[#0c1427]/70 border border-slate-800/40 backdrop-blur-3xl p-5 rounded-2xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.9)] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-10 text-left items-center group"
           >
             {/* Location */}
-            <div className="flex flex-col gap-2 w-full">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5 ml-1">
-                <MdLocationOn className="text-violet-500 text-sm" /> Location
-              </label>
+            <div className="w-full">
               <Input
+                type="number"
                 size="md"
-                variant="bordered"
-                placeholder="Enter city, area..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                variant="flat"
+                placeholder="Min price"
+                value={minPrice}
+                onChange={(e) => setMinPrice(e.target.value)}
+                startContent={
+                  <MdAttachMoney className="text-slate-400 text-lg shrink-0" />
+                }
                 classNames={{
                   inputWrapper:
-                    "bg-slate-950/90 border-slate-800/80 hover:border-slate-700/80 focus-within:!border-violet-500/80 rounded-xl h-11 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)] focus-within:shadow-[0_0_15px_rgba(139,92,246,0.15)] outline-none ring-0",
+                    "bg-white hover:bg-slate-50 data-[focus=true]:bg-white rounded-xl h-14 transition-all duration-200 shadow-sm border border-transparent data-[focus=true]:border-slate-300 pl-3 flex items-center",
+                  innerWrapper: "flex items-center gap-2 pb-0 mb-0",
                   input:
-                    "text-slate-200 placeholder:text-slate-600 text-xs font-medium bg-transparent outline-none border-none focus:ring-0 focus:outline-none",
-                  mainWrapper: "outline-none ring-0",
+                    "text-slate-800 text-sm font-normal bg-transparent h-full p-0 m-0 flex items-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
                 }}
               />
             </div>
 
-            {/* Property Type */}
-            <div className="flex flex-col gap-2 w-full">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5 ml-1">
-                <MdOutlineApartment className="text-violet-500 text-sm" />{" "}
-                Property Type
-              </label>
+            {/* Property Type*/}
+            <div className="w-full">
               <Select
                 size="md"
-                variant="bordered"
-                placeholder="Any Type"
+                variant="flat"
+                placeholder="Property Type"
                 selectedKeys={propertyType ? [propertyType] : []}
                 onChange={(e) => setPropertyType(e.target.value)}
+                startContent={
+                  <MdOutlineApartment className="text-slate-400 text-lg mr-1 shrink-0" />
+                }
                 classNames={{
                   trigger:
-                    "bg-slate-950/90 border-slate-800/80 hover:border-slate-700/80 data-[focus=true]:!border-violet-500/80 data-[open=true]:border-violet-500/80 rounded-xl h-11 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)] data-[focus=true]:shadow-[0_0_15px_rgba(139,92,246,0.15)] outline-none ring-0 border-none",
-                  value: "text-slate-200 text-xs font-medium",
-                  innerWrapper: "text-slate-400 outline-none",
+                    "bg-white hover:bg-slate-50 data-[focus=true]:bg-white rounded-xl h-14 transition-all duration-200 shadow-sm border border-transparent data-[focus=true]:border-slate-300 relative pr-10",
+                  value: "text-slate-800 text-sm font-normal",
+                  innerWrapper:
+                    "text-slate-400 flex items-center justify-start",
+                  selectorButton:
+                    "text-slate-400 text-sm absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center",
                   popoverContent:
-                    "bg-slate-950/95 border border-slate-800/80 text-slate-200 rounded-xl backdrop-blur-md shadow-2xl",
+                    "bg-white border border-slate-200 text-slate-800 rounded-xl shadow-xl p-1",
                 }}
               >
                 {propertyTypes.map((type) => (
                   <SelectItem
                     key={type}
                     value={type}
-                    className="text-xs text-slate-300 data-[hover=true]:bg-slate-900 data-[selectable=true]:focus:bg-violet-600/20 data-[selected=true]:bg-violet-600/30 data-[selected=true]:text-violet-300 rounded-lg transition-all"
+                    className="text-sm text-slate-700 data-[hover=true]:bg-slate-100 data-[selected=true]:bg-slate-200 data-[selected=true]:text-slate-900 rounded-lg transition-all py-2"
                   >
                     {type}
                   </SelectItem>
@@ -151,55 +154,60 @@ export default function HeroSection() {
             </div>
 
             {/* Min Price */}
-            <div className="flex flex-col gap-2 w-full">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5 ml-1">
-                <MdAttachMoney className="text-violet-500 text-sm" /> Min Price
-              </label>
+            <div className="w-full">
               <Input
                 type="number"
                 size="md"
-                variant="bordered"
-                placeholder="Min USD"
+                variant="flat"
+                placeholder="Min price"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
+                startContent={
+                  <MdAttachMoney className="text-slate-400 text-lg shrink-0" />
+                }
                 classNames={{
                   inputWrapper:
-                    "bg-slate-950/90 border-slate-800/80 hover:border-slate-700/80 focus-within:!border-violet-500/80 rounded-xl h-11 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)] focus-within:shadow-[0_0_15px_rgba(139,92,246,0.15)] outline-none ring-0",
+                    "bg-white hover:bg-slate-50 data-[focus=true]:bg-white rounded-xl h-14 transition-all duration-200 shadow-sm border border-transparent data-[focus=true]:border-slate-300 pl-3 flex items-center",
+                  innerWrapper: "flex items-center gap-2 pb-0 mb-0",
                   input:
-                    "text-slate-200 placeholder:text-slate-600 text-xs font-medium bg-transparent outline-none border-none focus:ring-0 focus:outline-none",
+                    "text-slate-800 text-sm font-normal bg-transparent h-full p-0 m-0 flex items-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
                 }}
               />
             </div>
 
-            {/* Max Price */}
-            <div className="flex flex-col gap-2 w-full">
-              <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5 ml-1">
-                <MdAttachMoney className="text-violet-500 text-sm" /> Max Price
-              </label>
+            {/* Max Price  */}
+            <div className="w-full">
               <Input
                 type="number"
                 size="md"
-                variant="bordered"
-                placeholder="Max USD"
+                variant="flat"
+                placeholder="Max price"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
+                startContent={
+                  <MdAttachMoney className="text-slate-400 text-lg shrink-0" />
+                }
                 classNames={{
                   inputWrapper:
-                    "bg-slate-950/90 border-slate-800/80 hover:border-slate-700/80 focus-within:!border-violet-500/80 rounded-xl h-11 transition-all duration-300 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)] focus-within:shadow-[0_0_15px_rgba(139,92,246,0.15)] outline-none ring-0",
+                    "bg-white hover:bg-slate-50 data-[focus=true]:bg-white rounded-xl h-14 transition-all duration-200 shadow-sm border border-transparent data-[focus=true]:border-slate-300 pl-3 flex items-center",
+                  innerWrapper: "flex items-center gap-2 pb-0 mb-0",
                   input:
-                    "text-slate-200 placeholder:text-slate-600 text-xs font-medium bg-transparent outline-none border-none focus:ring-0 focus:outline-none",
+                    "text-slate-800 text-sm font-normal bg-transparent h-full p-0 m-0 flex items-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
                 }}
               />
             </div>
 
             {/* Search Button */}
-            <div className="w-full">
+            <div className="w-full group/btn">
               <Button
                 type="submit"
-                className="w-full bg-linear-to-r from-violet-600 to-indigo-600 font-bold text-xs uppercase tracking-wider text-white shadow-lg shadow-violet-500/10 hover:shadow-violet-500/30 hover:from-violet-500 hover:to-indigo-500 transition-all duration-300 rounded-xl h-11 active:scale-[0.98]"
-                startContent={<MdSearch size={20} />}
+                className="flex items-center justify-center w-full bg-[#0c1427] hover:bg-[#15223f] text-white font-medium text-sm transition-all duration-200 rounded-xl h-14 shadow-lg border border-slate-700/40 hover:-translate-y-px active:translate-y-px active:scale-[0.99] relative pl-12 pr-6"
               >
-                Search
+                <MdSearch
+                  size={20}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:translate-y-[-55%]"
+                />
+                <span>Search</span>
               </Button>
             </div>
           </motion.form>

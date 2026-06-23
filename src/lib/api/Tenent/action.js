@@ -16,3 +16,7 @@ export const deleteFevoritesCard = async (id) => {
   const resData = await deleteMutaiton(`/api/favorites/${id}`, "DELETE");
   return resData;
 };
+export async function submitReview(data) {
+  const res = await serverMutation(`/api/reviews`, "POST", data);
+  return res;
+}

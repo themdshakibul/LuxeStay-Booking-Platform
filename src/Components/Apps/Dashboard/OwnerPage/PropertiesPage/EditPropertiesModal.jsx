@@ -74,6 +74,7 @@ const EditPropertiesModal = ({
     const payload = {
       ...formData,
       amenities,
+      status: "Pending",
     };
 
     const resData = await upDateProperty(payload, propertyData?._id);

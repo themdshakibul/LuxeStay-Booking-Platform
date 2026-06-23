@@ -165,13 +165,48 @@ export default function AddProperty() {
                 onChange={setExtraFeatures}
                 placeholder="Balcony, Rooftop, CCTV"
               />
-              <InputField
+              {/* <InputField
                 label="Image URL"
                 value={images}
                 onChange={setImages}
                 placeholder="Cloudinary / Imgbb URL"
                 required
+              /> */}
+
+              <InputField
+                label="Image URL"
+                value={images}
+                onChange={(val) => {
+                  // শুধু URL allow করো
+                  if (
+                    val === "" ||
+                    val.startsWith("http://") ||
+                    val.startsWith("https://")
+                  ) {
+                    setImages(val);
+                  }
+                }}
+                onBlur={() => {
+                  // Blur এ validate করো
+                  if (
+                    images &&
+                    !images.startsWith("http://") &&
+                    !images.startsWith("https://")
+                  ) {
+                    setImages("");
+                    toast.error(
+                      "Please enter a valid URL starting with http:// or https://",
+                    );
+                  }
+                }}
+                placeholder="https://example.com/image.jpg"
+                required
               />
+              {images && !images.startsWith("http") && (
+                <p className="text-red-500 text-xs mt-1">
+                  URL must start with https://
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2">
