@@ -68,6 +68,11 @@ export default function AddProperty() {
       ownerEmail: user?.email,
     };
 
+    if (Number(rent) < 55) {
+      toast.error("Minimum rent must be 55!");
+      return;
+    }
+
     const resData = await addProperty(payload);
     if (resData?.insertedId) {
       toast.success("Property added successfully!");

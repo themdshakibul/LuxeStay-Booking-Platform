@@ -7,9 +7,6 @@ export const myBookingProperties = async (data) => {
   return resData;
 };
 
-
-
-
 export const addFevoritesCard = async (data) => {
   const resData = await serverMutation("/api/favorites", "POST", data);
   return resData;

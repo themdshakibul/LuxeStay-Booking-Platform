@@ -56,7 +56,7 @@ const DashboardSidebar = () => {
     ],
     owner: [
       {
-        label: "Analytics Home",
+        label: "Analytics",
         href: "/dashboard/owner",
         icon: MdDashboard,
       },
@@ -82,7 +82,10 @@ const DashboardSidebar = () => {
       },
     ],
     admin: [
-      { label: "All Users", href: "/dashboard/admin/users", icon: MdPeople },
+      { label: "All Users",
+        href: "/dashboard/admin/users",
+        icon: MdPeople
+      },
       {
         label: "All Properties",
         href: "/dashboard/admin/properties",

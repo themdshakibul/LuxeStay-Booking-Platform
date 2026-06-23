@@ -42,7 +42,7 @@ export default function Profile() {
             height={300}
             alt={user?.name}
             src={user?.image}
-            className="w-32 h-32 rounded-full text-large border-4 border-[#020618] bg-slate-800"
+            className="w-32 h-32 rounded-full text-large border-4 bg-slate-800 bject-cover border-violet-600 dark:border-violet-400"
           />
         </div>
       </div>

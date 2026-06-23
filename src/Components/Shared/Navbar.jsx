@@ -114,7 +114,7 @@ export default function Navbar() {
                       alt={user?.name}
                       width={100}
                       height={100}
-                      className="rounded-full w-11 h-11 object-cover"
+                      className="rounded-full w-11 h-11 object-cover border-2 border-violet-600 dark:border-violet-400"
                     />
                   </DropdownTrigger>
 
@@ -135,7 +135,7 @@ export default function Navbar() {
                           alt={user?.name}
                           width={100}
                           height={100}
-                          className="rounded-full w-11 h-11 object-cover"
+                          className="rounded-full w-11 h-11 object-cover border-2 border-violet-600 dark:border-violet-400"
                         />
                         <div className="flex flex-col min-w-0">
                           <p className="font-bold text-sm text-slate-800 dark:text-slate-200 truncate">

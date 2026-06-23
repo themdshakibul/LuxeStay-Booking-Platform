@@ -1,8 +1,8 @@
 import { stripe } from "@/lib/stripe";
 import Link from "next/link";
 import { myBookingProperties } from "@/lib/api/Tenent/action";
-import toast from "react-hot-toast";
 import { Button } from "@heroui/react";
+import { myPropertiesPayment } from "@/lib/api/OwnerPayments/action";
 
 export default async function SuccessPage({ searchParams }) {
   const params = await searchParams;
@@ -21,8 +21,41 @@ export default async function SuccessPage({ searchParams }) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
+    // if (session.payment_status === "paid") {
+    //   // metadata
+    //   const {
+    //     userName,
+    //     email,
+    //     phone,
+    //     date,
+    //     propertyId,
+    //     propertyTitle,
+    //     propertyPrice,
+    //     ownerEmail,
+    //   } = session.metadata;
+
+    //   const payload = {
+    //     userName,
+    //     email,
+    //     phone,
+    //     date,
+    //     propertyId,
+    //     propertyTitle,
+    //     ownerEmail,
+    //     propertyPrice: Number(propertyPrice),
+    //     paymentStatus: "Paid",
+    //     bookingStatus: "Pending",
+    //     stripeSessionId: sessionId,
+
+    //     paidAt: new Date().toISOString(),
+    //   };
+
+    //   const resData = await myBookingProperties(payload);
+
+    //   bookingSaved = true;
+    // }
+
     if (session.payment_status === "paid") {
-      // metadata
       const {
         userName,
         email,
@@ -46,19 +79,30 @@ export default async function SuccessPage({ searchParams }) {
         paymentStatus: "Paid",
         bookingStatus: "Pending",
         stripeSessionId: sessionId,
-
         paidAt: new Date().toISOString(),
       };
 
-      const resData = await myBookingProperties(payload);
+      const paymentPayload = {
+        tenantEmail: email,
+        ownerEmail,
+        propertyId,
+        propertyTitle,
+        amount: Number(propertyPrice),
+        currency: "BDT",
+        stripeSessionId: sessionId,
+        paymentStatus: "Paid",
+        paidAt: new Date().toISOString(),
+      };
 
-      if (resData) {
-        toast.success("Booking saved successfully!");
-      }
+      await Promise.all([
+        myBookingProperties(payload),
+        myPropertiesPayment(paymentPayload),
+      ]);
+
       bookingSaved = true;
     }
   } catch (err) {
-    toast.error("Payment verification failed");
+    // toast.error("Payment verification failed");
   }
 
   return (
