@@ -178,9 +178,15 @@ export default function MyProperties() {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Chip
-                        color={statusColorMap[prop.status] || "Default"}
+                        size="sm"
                         variant="flat"
-                        className="text-sm font-semibold"
+                        className={`font-bold text-sm flex items-center justify-center uppercase ${
+                          prop.status === "Pending"
+                            ? "bg-yellow-100 text-yellow-700 px-2"
+                            : prop.status === "Approved"
+                              ? "bg-green-100 text-green-700 px-2"
+                              : "bg-red-100 text-red-700 px-2"
+                        }`}
                       >
                         {prop.status}
                       </Chip>
@@ -189,7 +195,7 @@ export default function MyProperties() {
                           isIconOnly
                           size="sm"
                           variant="light"
-                          className="text-rose-400 hover:bg-slate-900"
+                          className="text-rose-400 rounded-full flex items-center justify-center hover:bg-slate-900 text-sm"
                           onClick={() =>
                             handleOpenFeedback(prop.rejectionFeedback)
                           }
@@ -207,7 +213,7 @@ export default function MyProperties() {
                         isIconOnly
                         size="sm"
                         variant="light"
-                        className="text-violet-400 hover:bg-slate-900"
+                        className="text-violet-400 rounded-full flex items-center hover:bg-slate-900"
                         title="Edit Property"
                         onClick={() => handleEditClick(prop)}
                       >
@@ -258,7 +264,7 @@ export default function MyProperties() {
               <ModalFooter className="border-t border-slate-800">
                 <Button
                   color="primary"
-                  className="bg-violet-600 font-bold"
+                  className="bg-violet-600 font-bold rounded-xl"
                   onClick={onClose}
                 >
                   Dismiss
