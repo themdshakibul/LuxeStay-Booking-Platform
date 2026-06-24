@@ -74,6 +74,8 @@ export default function AddProperty() {
     }
 
     const resData = await addProperty(payload);
+    console.log(resData);
+
     if (resData?.insertedId) {
       toast.success("Property added successfully!");
       redirect("/dashboard/owner/properties");
@@ -165,19 +167,11 @@ export default function AddProperty() {
                 onChange={setExtraFeatures}
                 placeholder="Balcony, Rooftop, CCTV"
               />
-              {/* <InputField
-                label="Image URL"
-                value={images}
-                onChange={setImages}
-                placeholder="Cloudinary / Imgbb URL"
-                required
-              /> */}
 
               <InputField
                 label="Image URL"
                 value={images}
                 onChange={(val) => {
-                  // শুধু URL allow করো
                   if (
                     val === "" ||
                     val.startsWith("http://") ||

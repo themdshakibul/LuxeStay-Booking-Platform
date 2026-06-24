@@ -1,21 +1,29 @@
 "use client";
 
 import PropertyCard from "@/Components/Apps/HomePage/PropertyCard";
-import { myAllProperties } from "@/lib/api/CardData/data";
-import { Button, Input, Pagination, ComboBox, ListBox } from "@heroui/react";
+import { Button, Input } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useMemo, Suspense } from "react";
 import {
   MdClear,
-  MdLocationOn,
   MdSearch,
   MdFilterList,
-  MdSort,
+  MdKeyboardArrowDown,
+  MdChevronLeft,
+  MdChevronRight,
 } from "react-icons/md";
 import { useDebounce } from "use-debounce";
 
-const allPropertiesData = await myAllProperties();
-const allProperties = allPropertiesData.filter((p) => p.status === "Approved");
+const buildParams = (s, pt, so, minP, maxP, pg) => {
+  const params = new URLSearchParams();
+  if (s) params.set("search", s);
+  if (pt && pt !== "All") params.set("propertyType", pt);
+  if (minP) params.set("minPrice", minP);
+  if (maxP) params.set("maxPrice", maxP);
+  if (so && so !== "newest") params.set("sort", so);
+  if (pg && pg > 1) params.set("page", pg);
+  return params;
+};
 
 const AllPropertiesPage = () => {
   const router = useRouter();
@@ -29,13 +37,18 @@ const AllPropertiesPage = () => {
 
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [debouncedSearch] = useDebounce(search, 600);
-
   const [propertyType, setPropertyType] = useState(
     searchParams.get("propertyType") || "All",
   );
   const [sort, setSort] = useState(searchParams.get("sort") || "newest");
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const [appliedMinPrice, setAppliedMinPrice] = useState(
+    searchParams.get("minPrice") || "",
+  );
+  const [appliedMaxPrice, setAppliedMaxPrice] = useState(
+    searchParams.get("maxPrice") || "",
+  );
   const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
 
   const propertyTypes = [
@@ -54,69 +67,116 @@ const AllPropertiesPage = () => {
     { key: "price_desc", label: "Price: High to Low" },
   ];
 
-  // Fetch with Demo Data + Filters
-  const fetchProperties = useCallback(() => {
-    setLoading(true);
-    setError(null);
-
-    setTimeout(() => {
-      let filtered = [...allProperties];
-
-      if (debouncedSearch) {
-        const term = debouncedSearch.toLowerCase();
-        filtered = filtered.filter(
-          (p) =>
-            p.title.toLowerCase().includes(term) ||
-            p.location.toLowerCase().includes(term) ||
-            p.description.toLowerCase().includes(term),
-        );
-      }
-
-      if (propertyType && propertyType !== "All") {
-        filtered = filtered.filter((p) => p.propertyType === propertyType);
-      }
-
-      if (minPrice)
-        filtered = filtered.filter((p) => p.rent >= Number(minPrice));
-      if (maxPrice)
-        filtered = filtered.filter((p) => p.rent <= Number(maxPrice));
-
-      if (sort === "price_asc") {
-        filtered.sort((a, b) => a.rent - b.rent);
-      } else if (sort === "price_desc") {
-        filtered.sort((a, b) => b.rent - a.rent);
-      }
-
-      setProperties(filtered);
-      setTotalCount(filtered.length);
-      setTotalPages(Math.ceil(filtered.length / 9) || 1);
-      setLoading(false);
-    }, 500);
-  }, [debouncedSearch, propertyType, sort, minPrice, maxPrice]);
-
   useEffect(() => {
+    const fetchProperties = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const params = new URLSearchParams();
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        if (propertyType && propertyType !== "All")
+          params.set("propertyType", propertyType);
+        if (appliedMinPrice) params.set("minPrice", appliedMinPrice);
+        if (appliedMaxPrice) params.set("maxPrice", appliedMaxPrice);
+        if (sort && sort !== "newest") params.set("sort", sort);
+        params.set("page", page);
+        params.set("limit", 9);
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/property?${params.toString()}`,
+        );
+        const json = await res.json();
+
+        const data = json.data || [];
+        const total = json.total || 0;
+        const pages = json.totalPages || (total > 0 ? Math.ceil(total / 9) : 1);
+
+        setProperties(data);
+        setTotalCount(total);
+        setTotalPages(pages);
+      } catch (err) {
+        setError("Failed to load properties. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchProperties();
-  }, [fetchProperties]);
+  }, [
+    debouncedSearch,
+    propertyType,
+    sort,
+    appliedMinPrice,
+    appliedMaxPrice,
+    page,
+  ]);
 
-  //   (newParams = {}) => {
-  //     const params = new URLSearchParams(searchParams.toString());
-  //     Object.entries(newParams).forEach(([key, value]) => {
-  //       if (value && value !== "" && value !== "All" && value !== "newest") {
-  //         params.set(key, value);
-  //       } else {
-  //         params.delete(key);
-  //       }
-  //     });
-  //     if (!newParams.page) params.set("page", "1");
-  //     router.push(`/properties?${params.toString()}`, { scroll: false });
-  //   },
-  //   [router, searchParams],
-  // );
+  const goToPage = (p) => {
+    if (p < 1 || p > totalPages) return;
+    setPage(p);
+    const params = buildParams(
+      debouncedSearch,
+      propertyType,
+      sort,
+      appliedMinPrice,
+      appliedMaxPrice,
+      p,
+    );
+    router.push(`/properties${params.toString() ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  // const handleFilterChange = (key, value) => {
-  //   setPage(1);
-  //   updateURL({ [key]: value });
-  // };
+  const handleTypeChange = (e) => {
+    const val = e.target.value;
+    setPropertyType(val);
+    setPage(1);
+    const params = buildParams(
+      debouncedSearch,
+      val,
+      sort,
+      appliedMinPrice,
+      appliedMaxPrice,
+      1,
+    );
+    router.push(`/properties${params.toString() ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+  };
+
+  const handleSortChange = (e) => {
+    const val = e.target.value;
+    setSort(val);
+    setPage(1);
+    const params = buildParams(
+      debouncedSearch,
+      propertyType,
+      val,
+      appliedMinPrice,
+      appliedMaxPrice,
+      1,
+    );
+    router.push(`/properties${params.toString() ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+  };
+
+  const handleSearchClick = () => {
+    setAppliedMinPrice(minPrice);
+    setAppliedMaxPrice(maxPrice);
+    setPage(1);
+    const params = buildParams(
+      debouncedSearch,
+      propertyType,
+      sort,
+      minPrice,
+      maxPrice,
+      1,
+    );
+    router.push(`/properties${params.toString() ? `?${params}` : ""}`, {
+      scroll: false,
+    });
+  };
 
   const handleClearFilters = () => {
     setSearch("");
@@ -124,6 +184,8 @@ const AllPropertiesPage = () => {
     setSort("newest");
     setMinPrice("");
     setMaxPrice("");
+    setAppliedMinPrice("");
+    setAppliedMaxPrice("");
     setPage(1);
     router.push("/properties");
   };
@@ -132,9 +194,33 @@ const AllPropertiesPage = () => {
     let count = 0;
     if (search) count++;
     if (propertyType !== "All") count++;
-    if (minPrice || maxPrice) count++;
+    if (appliedMinPrice || appliedMaxPrice) count++;
     return count;
-  }, [search, propertyType, minPrice, maxPrice]);
+  }, [search, propertyType, appliedMinPrice, appliedMaxPrice]);
+
+  // Generate page numbers array with ellipsis
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (page > 3) pages.push("...");
+      for (
+        let i = Math.max(2, page - 1);
+        i <= Math.min(totalPages - 1, page + 1);
+        i++
+      ) {
+        pages.push(i);
+      }
+      if (page < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
+  const nativeSelectClass =
+    "w-full h-12 rounded-xl bg-slate-900 border border-slate-700 text-slate-100 text-sm px-3 pr-8 appearance-none cursor-pointer focus:outline-none focus:border-violet-500 transition-colors";
 
   return (
     <div className="bg-slate-900 text-slate-100 min-h-screen pb-12">
@@ -161,7 +247,7 @@ const AllPropertiesPage = () => {
           )}
         </div>
 
-        {/* Filters Section */}
+        {/* Filters */}
         <div className="bg-slate-950 border border-slate-800 rounded-3xl p-5 md:p-6 shadow-2xl mb-12">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-8 h-8 bg-violet-500/10 rounded-xl flex items-center justify-center shrink-0">
@@ -176,7 +262,7 @@ const AllPropertiesPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-4 items-end w-full">
-            {/* Search Bar */}
+            {/* Search */}
             <div className="md:col-span-2 lg:col-span-4 w-full">
               <label className="text-xs uppercase tracking-widest text-slate-400 mb-1.5 block">
                 LOCATION
@@ -186,42 +272,32 @@ const AllPropertiesPage = () => {
                 placeholder="Search city, area or landmark..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full"
-                classNames={{
-                  base: "w-full",
-                  inputWrapper:
-                    "bg-slate-900 border-slate-700 focus-within:border-violet-500 h-12 text-base",
-                }}
+                className={nativeSelectClass}
               />
             </div>
 
-            {/* Property Type */}
+            {/* Type */}
             <div className="lg:col-span-2 w-full">
               <label className="text-xs uppercase tracking-widest text-slate-400 mb-1.5 block">
                 TYPE
               </label>
-              <ComboBox
-                selectedKey={propertyType}
-                onSelectionChange={(key) => {
-                  setPropertyType(key);
-                  handleFilterChange("propertyType", key);
-                }}
-              >
-                <ComboBox.InputGroup>
-                  <Input
-                    classNames={{ inputWrapper: "h-12" }}
-                    placeholder="All Types"
-                  />
-                  <ComboBox.Trigger />
-                </ComboBox.InputGroup>
-                <ComboBox.Popover>
-                  <ListBox>
-                    {propertyTypes.map((item) => (
-                      <ListBox.Item key={item.key}>{item.label}</ListBox.Item>
-                    ))}
-                  </ListBox>
-                </ComboBox.Popover>
-              </ComboBox>
+              <div className="relative">
+                <select
+                  value={propertyType}
+                  onChange={handleTypeChange}
+                  className={nativeSelectClass}
+                >
+                  {propertyTypes.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+                <MdKeyboardArrowDown
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                  size={20}
+                />
+              </div>
             </div>
 
             {/* Sort */}
@@ -229,28 +305,23 @@ const AllPropertiesPage = () => {
               <label className="text-xs uppercase tracking-widest text-slate-400 mb-1.5 block">
                 SORT
               </label>
-              <ComboBox
-                selectedKey={sort}
-                onSelectionChange={(key) => {
-                  setSort(key);
-                  handleFilterChange("sort", key);
-                }}
-              >
-                <ComboBox.InputGroup>
-                  <Input
-                    classNames={{ inputWrapper: "h-12" }}
-                    placeholder="Sort"
-                  />
-                  <ComboBox.Trigger />
-                </ComboBox.InputGroup>
-                <ComboBox.Popover>
-                  <ListBox>
-                    {sortOptions.map((item) => (
-                      <ListBox.Item key={item.key}>{item.label}</ListBox.Item>
-                    ))}
-                  </ListBox>
-                </ComboBox.Popover>
-              </ComboBox>
+              <div className="relative">
+                <select
+                  value={sort}
+                  onChange={handleSortChange}
+                  className={nativeSelectClass}
+                >
+                  {sortOptions.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+                <MdKeyboardArrowDown
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+                  size={20}
+                />
+              </div>
             </div>
 
             {/* Min Price */}
@@ -264,7 +335,7 @@ const AllPropertiesPage = () => {
                 placeholder="Min"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
-                classNames={{ inputWrapper: "h-12" }}
+                className={nativeSelectClass}
               />
             </div>
 
@@ -279,12 +350,12 @@ const AllPropertiesPage = () => {
                 placeholder="Max"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
-                classNames={{ inputWrapper: "h-12" }}
+                className={nativeSelectClass}
               />
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <div className="flex justify-end gap-3 mt-6">
             <Button
               size="md"
@@ -299,14 +370,14 @@ const AllPropertiesPage = () => {
               size="md"
               color="primary"
               startContent={<MdSearch size={18} />}
-              onClick={fetchProperties}
+              onClick={handleSearchClick}
             >
               Search
             </Button>
           </div>
         </div>
 
-        {/* Results Section */}
+        {/* Results */}
         {error && (
           <div className="bg-red-900/30 border border-red-500/50 text-red-400 p-6 rounded-2xl text-center mb-10">
             {error}
@@ -336,24 +407,63 @@ const AllPropertiesPage = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-              {allProperties.map((property) => (
+              {properties.map((property) => (
                 <PropertyCard key={property._id} property={property} />
               ))}
             </div>
 
+            {/* Custom Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center mt-16">
-                <Pagination
-                  total={totalPages}
-                  page={page}
-                  onChange={(p) => {
-                    setPage(p);
-                    updateURL({ page: p });
-                  }}
-                  color="primary"
-                  size="lg"
-                  showControls
-                />
+              <div className="flex flex-col items-center gap-4 mt-16">
+                <p className="text-slate-400 text-sm">
+                  Page <span className="text-white font-semibold">{page}</span>{" "}
+                  of{" "}
+                  <span className="text-white font-semibold">{totalPages}</span>
+                </p>
+
+                <div className="flex items-center gap-2">
+                  {/* Prev button */}
+                  <button
+                    onClick={() => goToPage(page - 1)}
+                    disabled={page === 1}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <MdChevronLeft size={20} />
+                  </button>
+
+                  {/* Page numbers */}
+                  {getPageNumbers().map((p, i) =>
+                    p === "..." ? (
+                      <span
+                        key={`ellipsis-${i}`}
+                        className="w-10 h-10 flex items-center justify-center text-slate-500 text-sm"
+                      >
+                        ...
+                      </span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => goToPage(p)}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-semibold border transition-colors ${
+                          page === p
+                            ? "bg-violet-600 border-violet-600 text-white"
+                            : "bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    ),
+                  )}
+
+                  {/* Next button */}
+                  <button
+                    onClick={() => goToPage(page + 1)}
+                    disabled={page === totalPages}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-800 border border-slate-700 text-slate-300 hover:bg-slate-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <MdChevronRight size={20} />
+                  </button>
+                </div>
               </div>
             )}
           </>
@@ -363,4 +473,12 @@ const AllPropertiesPage = () => {
   );
 };
 
-export default AllPropertiesPage;
+function AllProperties() {
+  return (
+    <Suspense fallback={<p> loding...</p>}>
+      <AllPropertiesPage />
+    </Suspense>
+  );
+}
+
+export default AllProperties;
