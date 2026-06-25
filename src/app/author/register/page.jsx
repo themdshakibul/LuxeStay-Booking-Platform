@@ -102,8 +102,8 @@ export default function Register() {
     });
 
     if (data) {
-      toast.success("Signed In Successfully!");
       redirect("/");
+      toast.success("Signed In Successfully!");
     } else {
       toast.error(data.error.message);
     }

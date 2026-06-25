@@ -22,40 +22,6 @@ export default async function SuccessPage({ searchParams }) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
-    // if (session.payment_status === "paid") {
-    //   // metadata
-    //   const {
-    //     userName,
-    //     email,
-    //     phone,
-    //     date,
-    //     propertyId,
-    //     propertyTitle,
-    //     propertyPrice,
-    //     ownerEmail,
-    //   } = session.metadata;
-
-    //   const payload = {
-    //     userName,
-    //     email,
-    //     phone,
-    //     date,
-    //     propertyId,
-    //     propertyTitle,
-    //     ownerEmail,
-    //     propertyPrice: Number(propertyPrice),
-    //     paymentStatus: "Paid",
-    //     bookingStatus: "Pending",
-    //     stripeSessionId: sessionId,
-
-    //     paidAt: new Date().toISOString(),
-    //   };
-
-    //   const resData = await myBookingProperties(payload);
-
-    //   bookingSaved = true;
-    // }
-
     if (session.payment_status === "paid") {
       const {
         userName,
@@ -80,7 +46,7 @@ export default async function SuccessPage({ searchParams }) {
         paymentStatus: "Paid",
         bookingStatus: "Pending",
         stripeSessionId: sessionId,
-        phoneNumber: phoneNumber(phone),  
+        phoneNumber: phoneNumber(phone),
         paidAt: new Date().toISOString(),
       };
 

@@ -6,7 +6,7 @@ export const getTenentOverview = async (email, token) => {
 };
 
 export const getFevoritesCard = async (email, token) => {
-  const result = await serverFetch(`/api/favorites/${email}`, token);
+  const result = await protectedServerFetch(`/api/favorites/${email}`, token);
   return result;
 };
 

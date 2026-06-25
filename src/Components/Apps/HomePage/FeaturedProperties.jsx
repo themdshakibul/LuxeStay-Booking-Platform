@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import PropertyCard from "./PropertyCard";
 import { motion } from "framer-motion";
 import { myFeaturesProperties } from "@/lib/api/CardData/data";

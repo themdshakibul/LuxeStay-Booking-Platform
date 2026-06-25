@@ -34,6 +34,7 @@ export default function OwnerAnalytics() {
   const [totalProperties, setTotalProperties] = useState(0);
   const [totalBookings, setTotalBookings] = useState(0);
   const [chartData, setChartData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (user?.email) {
@@ -48,6 +49,7 @@ export default function OwnerAnalytics() {
     const token = data?.token;
 
     setLoading(true);
+    setError(null);
     try {
       const data = await myOwnerAnalytics(email, token);
       setTotalEarnings(data.totalEarnings || 0);
@@ -59,8 +61,9 @@ export default function OwnerAnalytics() {
       } else {
         setChartData(generateEmptyMonths());
       }
-    } catch (error) {
-      console.error("Error fetching analytics:", error);
+    } catch (err) {
+      console.error("Error fetching analytics:", err);
+      setError("Could not load dashboard data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -193,6 +196,23 @@ export default function OwnerAnalytics() {
     return (
       <div className="flex justify-center items-center py-20">
         <LoadingPages />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container m-auto min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-3 p-8 border border-red-900/40 bg-red-950/20 rounded-2xl max-w-md">
+          <p className="text-2xl">⚠️</p>
+          <p className="text-red-400 font-medium">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-colors"
+          >
+            Reload page
+          </button>
+        </div>
       </div>
     );
   }

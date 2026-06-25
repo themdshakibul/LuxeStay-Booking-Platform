@@ -25,6 +25,7 @@ export default function AdminOverview() {
   const [totalProperties, setTotalProperties] = useState(0);
   const [totalBookings, setTotalBookings] = useState(0);
   const [chartData, setChartData] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchStats();
@@ -33,6 +34,7 @@ export default function AdminOverview() {
 
   const fetchStats = async () => {
     setLoading(true);
+    setError(null);
     try {
       const data = await getAdminOverview();
       setTotalUsers(data.totalUsers || 0);
@@ -45,8 +47,9 @@ export default function AdminOverview() {
       } else {
         setChartData(generateEmptyMonths());
       }
-    } catch (error) {
-      console.error("Error fetching admin stats:", error);
+    } catch (err) {
+      console.error("Error fetching admin stats:", err);
+      setError("Could not load dashboard data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -120,6 +123,23 @@ export default function AdminOverview() {
     return (
       <div className="flex justify-center items-center py-20">
         <LoadingPages />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container m-auto min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-3 p-8 border border-red-900/40 bg-red-950/20 rounded-2xl max-w-md">
+          <p className="text-2xl">⚠️</p>
+          <p className="text-red-400 font-medium">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm transition-colors"
+          >
+            Reload page
+          </button>
+        </div>
       </div>
     );
   }
