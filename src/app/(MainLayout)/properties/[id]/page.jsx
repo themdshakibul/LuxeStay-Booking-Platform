@@ -22,6 +22,7 @@ import { authClient } from "@/lib/auth-client";
 import { addFevoritesCard } from "@/lib/api/Tenent/action";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 export default function PropertyDetailsPage({ params }) {
   const { id } = use(params);
@@ -77,7 +78,7 @@ export default function PropertyDetailsPage({ params }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl font-bold">Loading Property Details...</p>
+        <LoadingPages />
       </div>
     );
   }

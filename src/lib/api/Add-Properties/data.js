@@ -1,16 +1,16 @@
-import { serverFetch } from "../server";
+import { protectedServerFetch, serverFetch } from "../server";
 
 export async function getOwnerBookings(email) {
-  const res = await serverFetch(`/api/owner/bookings/${email}`);
+  const res = await protectedServerFetch(`/api/owner/bookings/${email}`);
   return res;
 }
 
-export const myProperties = async (email) => {
-  const result = await serverFetch(`/api/myproperty/${email}`);
+export const myProperties = async (email, token) => {
+  const result = await protectedServerFetch(`/api/myproperty/${email}`, token);
   return result;
 };
 
-export const myOwnerAnalytics = async (email) => {
-  const result = await serverFetch(`/api/owner/analyse/${email}`);
+export const myOwnerAnalytics = async (email, token) => {
+  const result = await serverFetch(`/api/owner/analyse/${email}`, token);
   return result;
 };

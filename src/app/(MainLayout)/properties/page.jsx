@@ -1,6 +1,7 @@
 "use client";
 
 import PropertyCard from "@/Components/Apps/HomePage/PropertyCard";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 import { Button, Input } from "@heroui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo, Suspense } from "react";
@@ -389,7 +390,7 @@ const AllPropertiesPage = () => {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="bg-slate-950 rounded-3xl h-96 animate-pulse"
+                className="bg-slate-950 rounded-3xl h-96 animate-pulse "
               />
             ))}
           </div>
@@ -475,7 +476,13 @@ const AllPropertiesPage = () => {
 
 function AllProperties() {
   return (
-    <Suspense fallback={<p> loding...</p>}>
+    <Suspense
+      fallback={
+        <>
+          <LoadingPages />
+        </>
+      }
+    >
       <AllPropertiesPage />
     </Suspense>
   );

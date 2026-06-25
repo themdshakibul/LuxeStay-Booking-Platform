@@ -31,6 +31,7 @@ import EditPropertiesModal from "@/Components/Apps/Dashboard/OwnerPage/Propertie
 import { deleteProperty } from "@/lib/api/Add-Properties/action";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 export default function MyProperties() {
   const { data: session } = useSession();
@@ -95,12 +96,6 @@ export default function MyProperties() {
     onEditOpen();
   };
 
-  const statusColorMap = {
-    Pending: "warning",
-    Approved: "success",
-    Rejected: "danger",
-  };
-
   return (
     <div className="w-full">
       <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
@@ -124,7 +119,7 @@ export default function MyProperties() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Retrieving listings..." />
+          <LoadingPages />
         </div>
       ) : properties.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800/60 rounded-2xl p-6">

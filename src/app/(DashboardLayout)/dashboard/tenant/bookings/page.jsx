@@ -174,6 +174,7 @@ import { MdOutlineBookmarkAdded, MdPayment } from "react-icons/md";
 import Link from "next/link";
 import { getBookingProperties } from "@/lib/api/Tenent/data";
 import { useSession } from "@/lib/auth-client";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -224,7 +225,7 @@ const BookingPage = () => {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Loading reservation requests..." />
+          <LoadingPages />
         </div>
       ) : bookings.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800/60 rounded-2xl p-6">

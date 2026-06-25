@@ -19,6 +19,7 @@ import Swal from "sweetalert2";
 import { authClient } from "@/lib/auth-client";
 import { getOwnerBookings } from "@/lib/api/Add-Properties/data";
 import { updateBookingStatus } from "@/lib/api/Add-Properties/action";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -108,7 +109,8 @@ export default function BookingRequests() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Retrieving inquiries..." />
+          {/* <Spinner label="Retrieving inquiries..." /> */}
+          <LoadingPages />
         </div>
       ) : bookings.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800/60 rounded-2xl p-6">

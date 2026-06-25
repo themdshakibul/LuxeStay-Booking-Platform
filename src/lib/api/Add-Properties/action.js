@@ -1,9 +1,19 @@
 "use server";
 
+import { auth } from "@/lib/auth";
 import { deleteMutaiton, serverMutation } from "../server";
+import { headers } from "next/headers";
 
 export const addProperty = async (data) => {
-  const resData = await serverMutation("/api/property", "POST", data);
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+
+  if (!token) {
+    return { success: false, message: "No token found" };
+  }
+
+  const resData = await serverMutation("/api/property", "POST", data, token);
   return resData;
 };
 
@@ -17,11 +27,32 @@ export async function updateBookingStatus(id, bookingStatus) {
 }
 
 export const upDateProperty = async (data, id) => {
-  const resData = await serverMutation(`/api/property/${id}`, "PATCH", data);
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+
+  if (!token) {
+    return { success: false, message: "No token found" };
+  }
+
+  const resData = await serverMutation(
+    `/api/property/${id}`,
+    "PATCH",
+    data,
+    token,
+  );
   return resData;
 };
 
 export const deleteProperty = async (id) => {
-  const resData = await deleteMutaiton(`/api/property/${id}`);
+  const { token } = await auth.api.getToken({
+    headers: await headers(),
+  });
+
+  if (!token) {
+    return { success: false, message: "No token found" };
+  }
+
+  const resData = await deleteMutaiton(`/api/property/${id}`, token);
   return resData;
 };

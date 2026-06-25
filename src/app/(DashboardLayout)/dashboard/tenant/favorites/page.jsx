@@ -18,6 +18,7 @@ import { getFevoritesCard } from "@/lib/api/Tenent/data";
 import { useSession } from "@/lib/auth-client";
 import { deleteFevoritesCard } from "@/lib/api/Tenent/action";
 import toast from "react-hot-toast";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -57,7 +58,6 @@ const FaveritesPage = () => {
     }
   };
 
-  // ✅ current page এর data slice করা
   const totalPages = Math.ceil(favorites.length / ITEMS_PER_PAGE);
   const paginatedFavorites = favorites.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -77,7 +77,8 @@ const FaveritesPage = () => {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Loading saved properties..." />
+          {/* <Spinner label="Loading saved properties..." /> */}
+          <LoadingPages />
         </div>
       ) : favorites.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800/60 rounded-2xl p-6">
