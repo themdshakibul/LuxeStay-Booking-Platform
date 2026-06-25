@@ -25,7 +25,7 @@ import {
   MdRemoveRedEye,
 } from "react-icons/md";
 import Link from "next/link";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { myProperties } from "@/lib/api/Add-Properties/data";
 import EditPropertiesModal from "@/Components/Apps/Dashboard/OwnerPage/PropertiesPage/EditPropertiesModal";
 import { deleteProperty } from "@/lib/api/Add-Properties/action";
@@ -58,9 +58,12 @@ export default function MyProperties() {
 
   const fetchProperties = async () => {
     if (!session?.user?.email) return;
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const propertiesData = await myProperties(session?.user?.email);
+      const propertiesData = await myProperties(session?.user?.email, token);
       setProperties(propertiesData);
     } catch (error) {
     } finally {

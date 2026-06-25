@@ -12,8 +12,8 @@ export const addFevoritesCard = async (data) => {
   return resData;
 };
 
-export const deleteFevoritesCard = async (id) => {
-  const resData = await deleteMutaiton(`/api/favorites/${id}`, "DELETE");
+export const deleteFevoritesCard = async (id, token) => {
+  const resData = await deleteMutaiton(`/api/favorites/${id}`, "DELETE", token);
   return resData;
 };
 export async function submitReview(data) {

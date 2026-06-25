@@ -15,7 +15,7 @@ import {
 import { MdFavorite, MdDelete, MdRemoveRedEye } from "react-icons/md";
 import Link from "next/link";
 import { getFevoritesCard } from "@/lib/api/Tenent/data";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import { deleteFevoritesCard } from "@/lib/api/Tenent/action";
 import toast from "react-hot-toast";
 import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
@@ -39,15 +39,21 @@ const FaveritesPage = () => {
   }, [user?.email]);
 
   const fetchFavorites = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
-    const response = await getFevoritesCard(user.email);
+    const response = await getFevoritesCard(user.email, token);
     setFavorites(response);
     setLoading(false);
   };
 
   const handleRemoveFavorite = async (id) => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     try {
-      await deleteFevoritesCard(id);
+      await deleteFevoritesCard(id, token);
       toast.success("Property removed from favorites!");
       fetchFavorites();
       const newTotal = favorites.length - 1;
@@ -77,7 +83,6 @@ const FaveritesPage = () => {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          {/* <Spinner label="Loading saved properties..." /> */}
           <LoadingPages />
         </div>
       ) : favorites.length === 0 ? (

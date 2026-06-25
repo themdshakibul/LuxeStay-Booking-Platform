@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
+import { Card, CardBody, Button } from "@nextui-org/react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+
 import {
   MdOutlineAttachMoney,
   MdOutlineApartment,
@@ -22,6 +23,7 @@ import { authClient } from "@/lib/auth-client";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { myOwnerAnalytics } from "@/lib/api/Add-Properties/data";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 export default function OwnerAnalytics() {
   const { data: session } = authClient.useSession();
@@ -42,9 +44,12 @@ export default function OwnerAnalytics() {
   }, [user?.email]);
 
   const fetchAnalyticsData = async (email) => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const data = await myOwnerAnalytics(email);
+      const data = await myOwnerAnalytics(email, token);
       setTotalEarnings(data.totalEarnings || 0);
       setTotalProperties(data.totalProperties || 0);
       setTotalBookings(data.totalBookings || 0);
@@ -187,7 +192,7 @@ export default function OwnerAnalytics() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Spinner label="Loading analytics..." />
+        <LoadingPages />
       </div>
     );
   }

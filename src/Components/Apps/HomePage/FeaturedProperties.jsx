@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import PropertyCard from "./PropertyCard";
-import { Spinner } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { myFeaturesProperties } from "@/lib/api/CardData/data";
 

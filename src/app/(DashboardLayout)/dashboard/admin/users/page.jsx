@@ -20,6 +20,7 @@ import { authClient } from "@/lib/auth-client";
 import { getAllUsers } from "@/lib/api/Admin/data";
 import { updateUserRole } from "@/lib/api/Admin/actions";
 import Image from "next/image";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -36,9 +37,12 @@ export default function AdminUsers() {
   }, []);
 
   const fetchUsers = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const data = await getAllUsers();
+      const data = await getAllUsers(token);
       setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -101,12 +105,6 @@ export default function AdminUsers() {
     }
   };
 
-  const roleColors = {
-    admin: "secondary",
-    owner: "primary",
-    tenant: "default",
-  };
-
   const totalPages = Math.ceil(users.length / ITEMS_PER_PAGE);
   const paginatedUsers = users.slice(
     (page - 1) * ITEMS_PER_PAGE,
@@ -126,7 +124,7 @@ export default function AdminUsers() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Loading users directory..." />
+          <LoadingPages />
         </div>
       ) : users.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800 rounded-2xl">
@@ -174,10 +172,15 @@ export default function AdminUsers() {
                     </TableCell>
                     <TableCell>
                       <Chip
-                        color={roleColors[user.role] || "default"}
                         size="sm"
-                        variant="dot"
-                        className="font-bold text-sm"
+                        variant="flat"
+                        className={`font-bold text-sm flex items-center justify-center uppercase ${
+                          user.role === "owner"
+                            ? "bg-yellow-100 text-yellow-700 px-2"
+                            : user.role === "admin"
+                              ? "bg-green-100 text-green-700 px-2"
+                              : "bg-red-100 text-red-700 px-2"
+                        }`}
                       >
                         {user.role}
                       </Chip>

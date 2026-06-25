@@ -1,7 +1,7 @@
-import { protectedServerFetch, serverFetch } from "../server";
+import { protectedServerFetch } from "../server";
 
-export async function getOwnerBookings(email) {
-  const res = await protectedServerFetch(`/api/owner/bookings/${email}`);
+export async function getOwnerBookings(email, token) {
+  const res = await protectedServerFetch(`/api/owner/bookings/${email}`, token);
   return res;
 }
 
@@ -11,6 +11,9 @@ export const myProperties = async (email, token) => {
 };
 
 export const myOwnerAnalytics = async (email, token) => {
-  const result = await serverFetch(`/api/owner/analyse/${email}`, token);
+  const result = await protectedServerFetch(
+    `/api/owner/analyse/${email}`,
+    token,
+  );
   return result;
 };

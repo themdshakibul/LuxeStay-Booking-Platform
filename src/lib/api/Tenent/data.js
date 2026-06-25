@@ -1,13 +1,12 @@
 import { protectedServerFetch, serverFetch } from "../server";
 
 export const getTenentOverview = async (email, token) => {
-  console.log("Token value:", token);
   const res = await protectedServerFetch(`/api/tenant/stats/${email}`, token);
   return res;
 };
 
 export const getFevoritesCard = async (email, token) => {
-  const result = await protectedServerFetch(`/api/favorites/${email}`, token);
+  const result = await serverFetch(`/api/favorites/${email}`, token);
   return result;
 };
 

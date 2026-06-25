@@ -7,15 +7,13 @@ import WhyChooseUs from "@/Components/Apps/HomePage/WhyChooseUs";
 
 export default function Home() {
   return (
-    <div>
-      <main>
-        <HeroSection />
-        <FeaturedProperties />
-        <WhyChooseUs />
-        <TopLocations />
-        <Reviews />
-        <RentalStatistics />
-      </main>
-    </div>
+    <main>
+      <HeroSection />
+      <FeaturedProperties />
+      <WhyChooseUs />
+      <TopLocations />
+      <Reviews />
+      <RentalStatistics />
+    </main>
   );
 }

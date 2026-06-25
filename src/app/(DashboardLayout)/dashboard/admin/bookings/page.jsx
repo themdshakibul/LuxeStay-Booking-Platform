@@ -15,6 +15,8 @@ import {
 } from "@nextui-org/react";
 import { MdOutlineBookmarkAdded } from "react-icons/md";
 import { getAllBookings } from "@/lib/api/Admin/data";
+import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
+import { authClient } from "@/lib/auth-client";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -28,9 +30,12 @@ export default function AdminBookings() {
   }, []);
 
   const fetchBookings = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const data = await getAllBookings();
+      const data = await getAllBookings(token);
       setBookings(data);
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -64,7 +69,7 @@ export default function AdminBookings() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Spinner label="Loading database records..." />
+          <LoadingPages />
         </div>
       ) : bookings.length === 0 ? (
         <div className="text-center py-16 bg-slate-950 border border-slate-800 rounded-2xl p-6">

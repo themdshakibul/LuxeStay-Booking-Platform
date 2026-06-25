@@ -1,14 +1,18 @@
 import TenantStatsCards from "@/Components/Apps/Dashboard/TenantStatsCard/TenantStatsCards";
 import { getUseerSession } from "@/lib/api/cors/session";
 import { getTenentOverview, getUserReviews } from "@/lib/api/Tenent/data";
+import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 
 const TenantOverviewPage = async () => {
   const session = await getUseerSession();
   const email = session?.email;
 
+  const { data } = await authClient.token();
+  const token = data?.token;
+
   // Fetch both data
-  const bookingsData = await getTenentOverview(email);
+  const bookingsData = await getTenentOverview(email, token);
   const reviewsData = await getUserReviews(email);
 
   return (

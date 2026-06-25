@@ -25,6 +25,7 @@ import { MdCheck, MdClose, MdDelete, MdOutlineApartment } from "react-icons/md";
 import Swal from "sweetalert2";
 import { getAllProperties } from "@/lib/api/Admin/data";
 import { deleteProperty, updatePropertyStatus } from "@/lib/api/Admin/actions";
+import { authClient } from "@/lib/auth-client";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -44,10 +45,14 @@ export default function AdminProperties() {
   }, []);
 
   const fetchProperties = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const data = await getAllProperties();
-      setProperties(data);
+      const alldata = await getAllProperties(token);
+
+      setProperties(alldata);
     } catch (error) {
       console.error("Error fetching properties:", error);
     } finally {

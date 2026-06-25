@@ -173,7 +173,7 @@ import {
 import { MdOutlineBookmarkAdded, MdPayment } from "react-icons/md";
 import Link from "next/link";
 import { getBookingProperties } from "@/lib/api/Tenent/data";
-import { useSession } from "@/lib/auth-client";
+import { authClient, useSession } from "@/lib/auth-client";
 import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
 
 const ITEMS_PER_PAGE = 10;
@@ -191,9 +191,12 @@ const BookingPage = () => {
   }, [session]);
 
   const fetchBookings = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     try {
-      const response = await getBookingProperties(session?.user?.email);
+      const response = await getBookingProperties(session?.user?.email, token);
       if (response) {
         setBookings(response);
       }

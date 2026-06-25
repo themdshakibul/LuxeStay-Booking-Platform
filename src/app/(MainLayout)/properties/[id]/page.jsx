@@ -23,6 +23,7 @@ import { addFevoritesCard } from "@/lib/api/Tenent/action";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
+import NotFoundPage from "@/Components/Shared/Reusable/NotFoundPage";
 
 export default function PropertyDetailsPage({ params }) {
   const { id } = use(params);
@@ -86,7 +87,7 @@ export default function PropertyDetailsPage({ params }) {
   if (!property) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl font-bold text-red-500">Property not found!</p>
+        <NotFoundPage />
       </div>
     );
   }

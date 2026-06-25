@@ -38,9 +38,14 @@ export default function BookingRequests() {
   }, [user?.email]);
 
   const fetchBookings = async (email) => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
+    console.log(token);
+
     setLoading(true);
     try {
-      const data = await getOwnerBookings(email);
+      const data = await getOwnerBookings(email, token);
       setBookings(data);
     } catch (error) {
       console.error("Error fetching owner bookings:", error);
