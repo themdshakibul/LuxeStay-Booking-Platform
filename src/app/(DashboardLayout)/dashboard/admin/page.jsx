@@ -17,6 +17,7 @@ import { MdPeople, MdOutlineApartment, MdBookmarkAdded } from "react-icons/md";
 import { FaUserTie } from "react-icons/fa";
 import { getAdminOverview } from "@/lib/api/Admin/data";
 import LoadingPages from "@/Components/Shared/Reusable/LoadingPages";
+import { authClient } from "@/lib/auth-client";
 
 export default function AdminOverview() {
   const [loading, setLoading] = useState(true);
@@ -33,10 +34,13 @@ export default function AdminOverview() {
   }, []);
 
   const fetchStats = async () => {
+    const { data } = await authClient.token();
+    const token = data?.token;
+
     setLoading(true);
     setError(null);
     try {
-      const data = await getAdminOverview();
+      const data = await getAdminOverview(token);
       setTotalUsers(data.totalUsers || 0);
       setTotalOwners(data.totalOwners || 0);
       setTotalProperties(data.totalProperties || 0);

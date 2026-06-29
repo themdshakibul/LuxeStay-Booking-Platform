@@ -39,9 +39,12 @@ export default function PropertyDetailsPage({ params }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      const { data } = await authClient.token();
+      const token = data?.token;
+
       try {
         setLoading(true);
-        const result = await myAllPropertiesDetails(id);
+        const result = await myAllPropertiesDetails(id, token);
         setProperty(result);
       } catch (error) {
         console.error("Error fetching property:", error);

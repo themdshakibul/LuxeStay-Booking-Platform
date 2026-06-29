@@ -276,7 +276,7 @@ export default function Navbar() {
             {user && (
               <Link
                 className={`w-full text-sm font-bold flex items-center gap-3 px-3 py-2.5 rounded-lg ${pathname === "/dashboard" ? "text-violet-600 bg-violet-50 dark:bg-violet-950/30" : "text-slate-600 dark:text-slate-300"}`}
-                href="/dashboard"
+                href={`/dashboard/${session.user.role}`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 <MdDashboard size={20} /> Dashboard ({user?.role})

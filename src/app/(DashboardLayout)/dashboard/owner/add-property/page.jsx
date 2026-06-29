@@ -74,7 +74,6 @@ export default function AddProperty() {
     }
 
     const resData = await addProperty(payload);
-    console.log(resData);
 
     if (resData?.insertedId) {
       toast.success("Property added successfully!");

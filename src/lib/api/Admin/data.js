@@ -15,7 +15,7 @@ export async function getAllBookings(token) {
   return res;
 }
 
-export async function getAdminOverview() {
-  const res = await serverFetch(`/api/admin/stats`);
+export async function getAdminOverview(token) {
+  const res = await protectedServerFetch(`/api/admin/stats`, token);
   return res;
 }

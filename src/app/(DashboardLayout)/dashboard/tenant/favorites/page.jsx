@@ -41,7 +41,6 @@ const FaveritesPage = () => {
   const fetchFavorites = async () => {
     const { data } = await authClient.token();
     const token = data?.token;
-    console.log(token);
 
     setLoading(true);
     const response = await getFevoritesCard(user.email, token);
